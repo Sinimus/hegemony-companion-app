@@ -3,6 +3,7 @@ import { useGameStore } from '@/stores/useGameStore';
 import { WelcomeView } from '@/views/WelcomeView';
 import { DashboardView } from '@/views/DashboardView';
 import { ClassSelector } from '@/components/layout/ClassSelector';
+import { AppFooter } from '@/components/layout/AppFooter';
 import { CapitalistView } from '@/views/CapitalistView';
 import { WorkingView } from '@/views/WorkingView';
 import { StateView } from '@/views/StateView';
@@ -38,6 +39,7 @@ function App() {
         {currentView === 'state' && <StateView />}
         {currentView === 'middle' && <MiddleView />}
       </main>
+      <AppFooter />
     </div>
   );
 }
