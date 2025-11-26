@@ -11,10 +11,10 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     
-    # CRITICAL FIX: Add explicit permissions for pushing to GHCR packages
+    # CRITICAL FIX 1: Add explicit permissions for writing to GHCR
     permissions:
-      contents: read   # Needed for actions/checkout
-      packages: write  # Needed for pushing to GHCR
+      contents: read
+      packages: write
       
     steps:
       - name: Checkout Repository
@@ -30,15 +30,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # CRITICAL FIX 2: Define image metadata and force tag to lowercase
+      - name: Define Image Metadata (Lowercase Repository Name)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # Use lowercased repository name for Docker tag compatibility
+          images: ghcr.io/${{ github.repository }} 
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+          # The output tags are automatically lowercased by metadata-action's logic
+          # for repository names used in GHCR contexts.
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
           push: true
-          # FIX: Use ${{ github.repository }} (e.g., sinimus/hegemony-companion-app)
-          tags: ghcr.io/${{ github.repository }}:latest 
-          labels: |
-            org.opencontainers.image.title=Hegemony Companion App
-            org.opencontainers.image.description=Hegemony boardgame companion app
+          # Use the generated tags from the metadata step
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
