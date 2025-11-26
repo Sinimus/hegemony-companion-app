@@ -34,9 +34,9 @@
             context: .
             file: Dockerfile
             push: true
-            tags: ghcr.io/sinimus/hegemony-companion-PP:latest
+            tags: ghcr.io/sinimus/hegemony-companion-app:latest
             labels: |
-              org.opencontainers.image.title=Hegemony Companion PP
+              org.opencontainers.image.title=Hegemony Companion App
               org.opencontainers.image.description=Hegemony boardgame companion app
             # CRITICAL: Forces the build to x86_64 architecture for VPS compatibility
             platforms: linux/amd64
