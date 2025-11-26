@@ -1,5 +1,8 @@
 import { ProductionCalc } from '@/components/calculators/ProductionCalc';
-import { ExportCalc } from '@/components/calculators/ExportCalc';
+import { ImportTariffCalc } from '@/components/calculators/ImportTariffCalc';
+import { WealthCalc } from '@/components/calculators/WealthCalc';
+import { TradeCalc } from '@/components/calculators/TradeCalc';
+import { FactionReference } from '@/components/domain/FactionReference';
 
 export function CapitalistView() {
   return (
@@ -10,8 +13,13 @@ export function CapitalistView() {
       </header>
       <div className="grid gap-6 md:grid-cols-2">
         <ProductionCalc />
-        <ExportCalc />
+        <TradeCalc />
       </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        <WealthCalc />
+        <ImportTariffCalc />
+      </div>
+      <FactionReference playerClass="capitalist" />
     </div>
   );
 }

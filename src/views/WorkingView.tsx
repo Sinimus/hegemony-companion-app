@@ -1,4 +1,6 @@
 import { WorkerBudget } from '@/components/calculators/WorkerBudget';
+import { WorkingProsperityCalc } from '@/components/calculators/WorkingProsperityCalc';
+import { FactionReference } from '@/components/domain/FactionReference';
 
 export function WorkingView() {
   return (
@@ -9,10 +11,9 @@ export function WorkingView() {
       </header>
       <div className="grid gap-6 md:grid-cols-2">
         <WorkerBudget />
-        <div className="p-6 border border-dashed border-neutral-800 rounded-xl flex items-center justify-center text-neutral-600">
-          Prosperity Calculator Coming Soon
-        </div>
+        <WorkingProsperityCalc />
       </div>
+      <FactionReference playerClass="working" />
     </div>
   );
 }

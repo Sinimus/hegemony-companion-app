@@ -1,6 +1,7 @@
 import { useViewStore } from '@/stores/useViewStore';
 import { useGameStore } from '@/stores/useGameStore';
-import { PolicyBoard } from '@/components/domain/PolicyBoard';
+import { WelcomeView } from '@/views/WelcomeView';
+import { DashboardView } from '@/views/DashboardView';
 import { ClassSelector } from '@/components/layout/ClassSelector';
 import { CapitalistView } from '@/views/CapitalistView';
 import { WorkingView } from '@/views/WorkingView';
@@ -30,7 +31,8 @@ function App() {
       </header>
 
       <main className="p-4 md:px-8 max-w-4xl mx-auto animate-in fade-in duration-500">
-        {currentView === 'dashboard' && <PolicyBoard />}
+        {currentView === 'welcome' && <WelcomeView />}
+        {currentView === 'dashboard' && <DashboardView />}
         {currentView === 'capitalist' && <CapitalistView />}
         {currentView === 'working' && <WorkingView />}
         {currentView === 'state' && <StateView />}

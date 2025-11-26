@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { PlayerClass } from '@/types/game';
 
-type View = 'dashboard' | PlayerClass;
+type View = 'welcome' | 'dashboard' | PlayerClass;
 
 interface ViewState {
   currentView: View;
@@ -9,6 +9,6 @@ interface ViewState {
 }
 
 export const useViewStore = create<ViewState>((set) => ({
-  currentView: 'dashboard',
+  currentView: 'welcome',
   setView: (view) => set({ currentView: view }),
 }));
