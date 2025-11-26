@@ -1,42 +1,44 @@
 # .github/workflows/docker-build.yml
 
-  name: Docker Build & Push to GHCR
+name: Docker Build & Push to GHCR
 
-  # Trigger the workflow on push to the main branch
-  on:
-    push:
-      branches:
-        - main
+on:
+  push:
+    branches:
+      - main
 
-  jobs:
-    build-and-push:
-      # Use a standard Ubuntu runner
-      runs-on: ubuntu-latest
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    # CRITICAL FIX: Add explicit permissions for pushing to GHCR packages
+    permissions:
+      contents: read   # Needed for actions/checkout
+      packages: write  # Needed for pushing to GHCR
+      
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Log in to GitHub Container Registry (GHCR)
-          # Authenticates using the default GITHUB_TOKEN secret
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{ github.actor }}
-            password: ${{ secrets.GITHUB_TOKEN }}
-
-        - name: Build and Push Docker Image
-          uses: docker/build-push-action@v5
-          with:
-            context: .
-            file: Dockerfile
-            push: true
-            tags: ghcr.io/sinimus/hegemony-companion-app:latest
-            labels: |
-              org.opencontainers.image.title=Hegemony Companion App
-              org.opencontainers.image.description=Hegemony boardgame companion app
-            # CRITICAL: Forces the build to x86_64 architecture for VPS compatibility
-            platforms: linux/amd64
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          # FIX: Use ${{ github.repository }} (e.g., sinimus/hegemony-companion-app)
+          tags: ghcr.io/${{ github.repository }}:latest 
+          labels: |
+            org.opencontainers.image.title=Hegemony Companion App
+            org.opencontainers.image.description=Hegemony boardgame companion app
+          platforms: linux/amd64
