@@ -65,6 +65,22 @@ docker run -p 3000:3000 ghcr.io/sinimus/hegemony-companion-app:latest
 # Visit http://localhost:3000
 ```
 
+## 📖 Comprehensive Deployment Guide
+
+📋 **See [DEPLOYMENT.md](DEPLOYMENT.md)** for detailed instructions on deploying to:
+
+- 🏠 **Home Lab**: Docker Desktop, Docker Compose, Watchtower
+- 🖥️ **Unraid + Portainer**: UI deployment, webhooks, auto-updates
+- ☁️ **Cloud VPS**: DigitalOcean, AWS ECS, Google Cloud Run, Azure
+- 🛠️ **Self-Hosted**: Coolify, Plesk, cPanel
+- 🔧 **Kubernetes**: Minikube, production deployments
+- 🔄 **Auto-Deploy**: GitHub Actions webhooks for zero-downtime updates
+
+**One-command deployment:**
+```bash
+docker run -d --name hegemony-companion -p 3000:3000 --restart unless-stopped ghcr.io/sinimus/hegemony-companion-app:latest
+```
+
 ## 📋 How to Use
 
 ### 1. **Start with the Guide** 📚
