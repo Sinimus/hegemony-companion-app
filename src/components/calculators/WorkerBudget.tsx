@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
-import { calculateNetWage, INCOME_TAX_RATES } from '@/logic/taxes';
+import { calculateWorkerIncomeTax } from '@/logic/scoring';
 import { getMinimumWage } from '@/logic/economics';
 
 export function WorkerBudget() {
@@ -8,7 +8,9 @@ export function WorkerBudget() {
   const [workers, setWorkers] = useState(3);
 
   const wage = getMinimumWage(policies.labor);
-  const { gross, tax, net } = calculateNetWage(workers, wage, policies.tax);
+  const gross = workers * wage;
+  const incomeTax = calculateWorkerIncomeTax(workers, policies.labor, policies.tax);
+  const net = gross - incomeTax;
 
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
@@ -38,8 +40,8 @@ export function WorkerBudget() {
             <span className="text-green-400 font-mono">+{gross}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-neutral-400">Income Tax ({(INCOME_TAX_RATES[policies.tax] * 100).toFixed(0)}%)</span>
-            <span className="text-red-400 font-mono">-{tax}</span>
+            <span className="text-neutral-400">Income Tax (Pol: L{policies.labor} T{policies.tax})</span>
+            <span className="text-red-400 font-mono">-{incomeTax}</span>
           </div>
           <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
             <span className="text-neutral-200">Net Income</span>

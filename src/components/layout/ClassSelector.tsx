@@ -1,11 +1,12 @@
 import { useViewStore } from '@/stores/useViewStore';
 import { cn } from '@/lib/utils';
-import { Briefcase, Users, Home, Landmark, LayoutDashboard } from 'lucide-react';
+import { Briefcase, Users, Home, Landmark, LayoutDashboard, BookOpen } from 'lucide-react';
 
 export function ClassSelector() {
   const { currentView, setView } = useViewStore();
 
   const navItems = [
+    { id: 'welcome', label: 'Guide', icon: BookOpen, color: 'text-blue-400' },
     { id: 'dashboard', label: 'Policies', icon: LayoutDashboard, color: 'text-neutral-400' },
     { id: 'working', label: 'Working', icon: Users, color: 'text-class-working' },
     { id: 'middle', label: 'Middle', icon: Home, color: 'text-class-middle' },

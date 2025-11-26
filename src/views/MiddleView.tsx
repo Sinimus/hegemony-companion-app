@@ -1,5 +1,8 @@
 import { MiddleBalance } from '@/components/calculators/MiddleBalance';
-import { ExportCalc } from '@/components/calculators/ExportCalc';
+import { TradeCalc } from '@/components/calculators/TradeCalc';
+import { MiddleProsperityCalc } from '@/components/calculators/MiddleProsperityCalc';
+import { ImportTariffCalc } from '@/components/calculators/ImportTariffCalc';
+import { FactionReference } from '@/components/domain/FactionReference';
 
 export function MiddleView() {
   return (
@@ -10,8 +13,13 @@ export function MiddleView() {
       </header>
       <div className="grid gap-6 md:grid-cols-2">
         <MiddleBalance />
-        <ExportCalc />
+        <TradeCalc />
       </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        <MiddleProsperityCalc />
+        <ImportTariffCalc />
+      </div>
+      <FactionReference playerClass="middle" />
     </div>
   );
 }
