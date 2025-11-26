@@ -1,73 +1,195 @@
-# React + TypeScript + Vite
+# Hegemony Companion App 🎯
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive digital assistant for the **Hegemony** board game - your ultimate companion for economic strategy, policy management, and victory point calculations.
 
-Currently, two official plugins are available:
+> **⚠️ Copyright Notice**: This is an unofficial fan-made companion app. Hegemony board game and all related intellectual property belong to their respective publisher and creators. This tool is provided for educational and entertainment purposes only.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎮 About Hegemony
 
-## React Compiler
+Hegemony is an asymmetric economic simulation board game where players represent different social classes (Working, Middle, Capitalist, State) competing for influence and prosperity through policy decisions, economic management, and political maneuvering.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+### 🏛️ **Interactive Policy Board**
+- Real-time policy adjustment (7 major policies: Fiscal, Labor, Tax, Health, Education, Trade, Immigration)
+- Instant economic impact visualization
+- Dynamic Tax Multiplier calculations
+- State fiscal balance forecasting
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 📊 **Class-Specific Calculators**
+- **Working Class**: Worker budget, prosperity tracking, strike impact analysis
+- **Middle Class**: Production planning, foreign market trading, business management
+- **Capitalist**: Wealth accumulation, company management, tax optimization
+- **State**: Treasury management, legitimacy scoring, event resolution
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 📖 **Comprehensive Guides**
+- Welcome view with step-by-step instructions
+- Faction-specific turn flow guides
+- Complete game glossary with acronyms
+- Context-aware calculator recommendations
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 🎨 **Professional Design**
+- Mobile-responsive interface
+- Dark theme optimized for long gaming sessions
+- Intuitive navigation with visual class indicators
+- Real-time state persistence
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Quick Start
+
+### Online Version
+Visit the live app (if deployed) or run locally using Docker (see below).
+
+### Local Development
+```bash
+# Clone the repository
+git clone https://github.com/Sinimus/hegemony-companion-app.git
+cd hegemony-companion-app
+
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+
+# Visit http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Using Docker (Recommended)
+```bash
+# Pull from GitHub Container Registry
+docker pull ghcr.io/sinimus/hegemony-companion-app:latest
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# Run the app
+docker run -p 3000:3000 ghcr.io/sinimus/hegemony-companion-app:latest
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Visit http://localhost:3000
 ```
+
+## 📋 How to Use
+
+### 1. **Start with the Guide** 📚
+- Begin on the Welcome page for comprehensive instructions
+- Review the glossary for game terminology
+- Understand the round structure and your class objectives
+
+### 2. **Set Global Policies** ⚙️
+- Navigate to Policies → Dashboard
+- Adjust the 7 global policies to match your physical game board
+- Monitor real-time economic impacts
+
+### 3. **Select Your Faction** 👥
+- Choose your player class from the navigation
+- Access class-specific calculators and tools
+- Review your turn sequence and strategy guide
+
+### 4. **Calculate & Plan** 🧮
+- Use the specialized calculators for your actions
+- Plan optimal strategies with real-time feedback
+- Track VP opportunities and resource management
+
+## 🏗️ Technology Stack
+
+- **Frontend**: React 19 + TypeScript + Vite
+- **Styling**: Tailwind CSS v4 + shadcn/ui components
+- **State Management**: Zustand with localStorage persistence
+- **Validation**: Zod schema validation
+- **Icons**: Lucide React
+- **Build Tools**: pnpm package manager
+
+## 🐳 Deployment
+
+### Docker Deployment
+The application is containerized and ready for production deployment:
+
+#### Option 1: GitHub Container Registry (Recommended)
+```bash
+# Pull pre-built image
+docker pull ghcr.io/sinimus/hegemony-companion-app:latest
+
+# Run with exposed port
+docker run -d -p 3000:3000 --name hegemony-companion ghcr.io/sinimus/hegemony-companion-app:latest
+```
+
+#### Option 2: Build from Source
+```bash
+# Clone and build
+git clone https://github.com/Sinimus/hegemony-companion-app.git
+cd hegemony-companion-app
+docker build -t hegemony-companion .
+
+# Run
+docker run -d -p 3000:3000 hegemony-companion
+```
+
+#### Environment Variables
+```bash
+# Optional: Set custom port
+docker run -d -p 8080:3000 hegemony-companion
+
+# With custom name
+docker run -d -p 3000:3000 --name my-hegemony-app hegemony-companion
+```
+
+#### Production Considerations
+- The app serves static files only (no backend required)
+- All game state is stored locally in the browser
+- Suitable for hosting on any container platform (Docker Swarm, Kubernetes, cloud services)
+- No environment variables required - works out of the box
+
+### Manual Deployment
+```bash
+# Build for production
+pnpm build
+
+# The built files are in ./dist/
+# Serve with any static file server:
+npx serve dist -p 3000
+```
+
+## 🎯 Game Compatibility
+
+This companion app is designed for:
+- **Hegemony: Lead Your Class to Victory** base game
+- Compatible with standard rule sets and player counts
+- Suitable for both beginners learning the game and experienced players seeking optimization
+
+## 🔧 Development
+
+### Project Structure
+```
+src/
+├── components/
+│   ├── ui/              # shadcn/ui components
+│   ├── calculators/     # Game-specific calculators
+│   ├── domain/          # Game-specific components
+│   └── layout/          # Layout components
+├── logic/               # Game logic and calculations
+├── stores/              # Zustand state management
+├── types/               # TypeScript type definitions
+├── data/                # Static game data
+└── views/               # Page components
+```
+
+### Available Scripts
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm preview      # Preview production build
+pnpm lint         # Run ESLint
+```
+
+## 📜 License
+
+This project is open source and available under the MIT License. See [LICENSE](LICENSE) for details.
+
+## 📧 Author
+
+**Created by:** Lukáš Walek
+**Contact:** l.walek@proton.me
+**GitHub:** [@Sinimus](https://github.com/Sinimus)
+
+---
+
+> **🎲 Disclaimer**: This is an unofficial tool created by a fan for the Hegemony community. All Hegemony game rules, terminology, and intellectual property belong to their respective owners. This app is not affiliated with or endorsed by the game's publisher.
+
+**Enjoy your Hegemony sessions!** 🚀
