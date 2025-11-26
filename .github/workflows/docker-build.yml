@@ -28,23 +28,15 @@
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Define Image Metadata
-          # Generates tags like 'latest' and a short SHA tag
-          id: meta
-          uses: docker/metadata-action@v5
-          with:
-            images: ghcr.io/sinimus/hegemony-companion
-            tags: |
-              type=raw,value=latest
-              type=sha,format=short
-
         - name: Build and Push Docker Image
           uses: docker/build-push-action@v5
           with:
             context: .
             file: Dockerfile
             push: true
-            tags: ${{ steps.meta.outputs.tags }}
-            labels: ${{ steps.meta.outputs.labels }}
+            tags: ghcr.io/sinimus/hegemony-companion-PP:latest
+            labels: |
+              org.opencontainers.image.title=Hegemony Companion PP
+              org.opencontainers.image.description=Hegemony boardgame companion app
             # CRITICAL: Forces the build to x86_64 architecture for VPS compatibility
             platforms: linux/amd64
