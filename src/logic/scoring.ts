@@ -185,6 +185,80 @@ export const dropLegitimacy = (currentLevel: number): number => {
   return Math.ceil(currentLevel / 2);
 };
 
+// --- NEW MICRO-UTILITY LOGIC ---
+
+/**
+ * Calculates VP gained by Working Class from Trade Unions during Scoring Phase.
+ * Rule: WC gains 2 VP per Trade Union marker on the board.
+ * @param tradeUnionCount Number of Trade Union markers the WC player controls.
+ * @returns VP gained this round.
+ */
+export const calculateTradeUnionVp = (tradeUnionCount: number): number => {
+    return tradeUnionCount * 2;
+};
+
+/**
+ * Calculates recurring VP/Legitimacy gains for The State based on P4/P5 sales.
+ * Rules depend on P4/P5 level, calculated per 3 benefit tokens sold.
+ * P4/P5 in A: +1 Legitimacy per 3 sold.
+ * P4/P5 in B: +1 VP per 3 sold.
+ * P4/P5 in C: No benefit for the State.
+ * @param policyLevel Current level of P4 or P5.
+ * @param benefitsSold Number of Health or Education tokens sold this round.
+ */
+export const calculateWelfareBenefits = (
+    policyLevel: PolicyLevel,
+    benefitsSold: number
+): { vpGain: number; legitimacyGain: number } => {
+    const setsOfThree = Math.floor(benefitsSold / 3);
+
+    if (policyLevel === 'A') {
+        // P4/P5 in A (Free Public): +1 Legitimacy per 3 sold.
+        return { vpGain: 0, legitimacyGain: setsOfThree };
+    }
+    if (policyLevel === 'B') {
+        // P4/P5 in B (Subsidized): +1 VP per 3 sold.
+        return { vpGain: setsOfThree, legitimacyGain: 0 };
+    }
+    // P4/P5 in C (Private): No gain for the State.
+    return { vpGain: 0, legitimacyGain: 0 };
+};
+
+// --- NEW AUTOMA ASSISTANT LOGIC (Simplified Priority Check) ---
+
+/**
+ * Simulates a simplified priority check for a Capitalist Automa/Bot.
+ * This should eliminate the need to manually check the Automa flowchart for common scenarios.
+ * Note: This is an illustrative simplification of Automa complexity.
+ * @param currentCapital Current Capital value (used for Lobby check).
+ * @param currentTaxMultiplier Current Tax Multiplier value (P3/P4/P5).
+ */
+export const getCapitalistAutomaPriority = (
+    currentCapital: number,
+    currentTaxMultiplier: number
+): { action: string; tool: string } => {
+
+    // Priority 1: Pay off loans (always critical)
+    // We assume the user tracks loans manually, but the Automa priority check is vital.
+    if (currentCapital >= 50 && currentTaxMultiplier > 7) {
+        return { action: 'Pay Off Loan (50¥)', tool: 'LoanCostCalc' };
+    }
+
+    // Priority 2: Maintain Influence (Lobby check)
+    // Assume influence below 5 is risky. Lobby costs 30¥ for 3 Influence.
+    if (currentCapital >= 30 && currentTaxMultiplier < 5) {
+        return { action: 'Lobby for Influence (30¥)', tool: 'WealthCalc' };
+    }
+
+    // Priority 3: Build/Optimize Companies (Core action)
+    if (currentTaxMultiplier > 5) {
+        return { action: 'Build / Automate Company', tool: 'ProductionCalc' };
+    }
+
+    // Priority 4: Score VP (Generic)
+    return { action: 'Secure Market / Adjust Prices', tool: 'TradeCalc' };
+};
+
 /**
  * Calculates VP from Policy Alignment (Policies P1-P5).
  * @param policies The full current policy state.
