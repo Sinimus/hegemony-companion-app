@@ -103,3 +103,29 @@ export const calculateEmploymentTax = (
   const taxMultiplier = calculateTaxMultiplier(p3, p4, p5);
   return operationalCompanies * taxMultiplier;
 };
+
+/**
+ * Calculates mandatory loan costs and penalties for planning purposes.
+ * @param loanCount Current number of Loans (0-N).
+ */
+export const calculateLoanCosts = (loanCount: number) => {
+    if (loanCount <= 0) {
+        return { interestCost: 0, payoffCost: 0, maxWcMcPenalty: 0, maxCcPenalty: 0 };
+    }
+
+    const interestPerLoan = 5; // Paid in Preparation Phase
+    const payoffPerLoan = 50;  // Paid with Free Action
+
+    // Max penalty for WC/MC/State if they cannot pay 55¥ per loan at end-game. (-1 VP per 5¥ unpaid)
+    const maxWcMcPenaltyPerLoan = 11; // 55 / 5 = 11
+
+    // CC penalty is fixed -5 VP per loan.
+    const ccPenaltyPerLoan = 5;
+
+    return {
+        interestCost: loanCount * interestPerLoan,
+        payoffCost: loanCount * payoffPerLoan,
+        maxWcMcPenalty: loanCount * maxWcMcPenaltyPerLoan,
+        maxCcPenalty: loanCount * ccPenaltyPerLoan,
+    };
+};

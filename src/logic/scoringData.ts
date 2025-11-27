@@ -1,3 +1,5 @@
+import type { PolicyLevel, PlayerClass } from '@/types/game';
+
 export interface WealthBracket {
   minCapital: number;
   maxCapital: number;
@@ -45,3 +47,69 @@ export const POLITICAL_AGENDA_POLICIES_6_7 = ['trade', 'immigration'] as const;
 
 // Typ pro pole Policy Type, který zahrnuje všech 7 politik
 export type AllPolicyTypes = (typeof POLITICAL_AGENDA_POLICIES_1_5)[number] | (typeof POLITICAL_AGENDA_POLICIES_6_7)[number];
+
+// --- END-GAME SCORING TABLES ---
+
+export interface EndGameAlignmentVP {
+  policies: number;
+  vp: number;
+}
+
+// 1. Policy Alignment VP (Policies P1-P5)
+// WC aligns with A, CC with C, MC with B.
+export const END_GAME_VP_ALIGNMENT: Record<PolicyLevel, EndGameAlignmentVP[]> = {
+  A: [ // WC aligns with A
+    { policies: 1, vp: 1 },
+    { policies: 2, vp: 4 },
+    { policies: 3, vp: 8 },
+    { policies: 4, vp: 12 },
+    { policies: 5, vp: 18 },
+  ],
+  B: [ // MC aligns with B
+    { policies: 1, vp: 1 },
+    { policies: 2, vp: 3 },
+    { policies: 3, vp: 6 },
+    { policies: 4, vp: 10 },
+    { policies: 5, vp: 15 },
+  ],
+  C: [ // CC aligns with C
+    { policies: 1, vp: 1 },
+    { policies: 2, vp: 4 },
+    { policies: 3, vp: 8 },
+    { policies: 4, vp: 12 },
+    { policies: 5, vp: 18 },
+  ],
+};
+
+// 2. Money and Resource VP Conversion
+// Resource values are simplified here to 1 VP / 15¥ total resource value (approximates the 1/2 Food, 1/3 others rule)
+export const END_GAME_VP_CONVERSION: Record<PlayerClass, { moneyRate: number; moneyMaxVp: number; resourceRate: number; resourceTypes: string[] }> = {
+  // WC: 1 VP / 10¥ (Max 15 VP); 1 VP / 10¥ for Trade Union Influence
+  working: {
+    moneyRate: 10,
+    moneyMaxVp: 15,
+    resourceRate: 15,
+    resourceTypes: ['Food', 'Luxury', 'Health', 'Education', 'Influence'], // WC Influence is also tracked
+  },
+  // MC: 1 VP / 15¥; Resources (Storage Only)
+  middle: {
+    moneyRate: 15,
+    moneyMaxVp: Infinity,
+    resourceRate: 15,
+    resourceTypes: ['Food', 'Luxury', 'Health', 'Education'],
+  },
+  // CC: -5 VP per Loan; Resources (Storage & FTZ)
+  capitalist: {
+    moneyRate: Infinity, // No direct VP for money
+    moneyMaxVp: 0,
+    resourceRate: 15,
+    resourceTypes: ['Food', 'Luxury', 'Health', 'Education', 'Media'], // Media is an option for CC storage
+  },
+  // State: 1 VP / 30¥ (Treasury); Resources (Media Influence is 1/3)
+  state: {
+    moneyRate: 30, // 1 VP per 30¥ in Treasury
+    moneyMaxVp: Infinity,
+    resourceRate: 15,
+    resourceTypes: ['Food', 'Luxury', 'Health', 'Education', 'Media'],
+  },
+};

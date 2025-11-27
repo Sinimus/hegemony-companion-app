@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { PlayerClass } from '@/types/game';
 
-type View = 'welcome' | 'dashboard' | PlayerClass;
+type View = 'welcome' | 'dashboard' | 'endgame' | PlayerClass;
 
 interface ViewState {
   currentView: View;

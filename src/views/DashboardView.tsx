@@ -6,6 +6,7 @@ import { calculateWorkerIncomeTax } from '@/logic/scoring';
 import { Users, Briefcase, Landmark, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PolicyLevel } from '@/types/game';
+import { LoanCostCalc } from '@/components/calculators/LoanCostCalc'; // NEW IMPORT
 
 // Defaultní hodnoty pro simulaci na Dashboardu
 const DEFAULT_WORKERS = 3;
@@ -102,6 +103,11 @@ export function DashboardView() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* NEW: Loan Planner integrated below the quick stats, spanning all columns */}
+      <div className="pt-2">
+          <LoanCostCalc />
       </div>
 
       {/* Hlavní interaktivní část - Policy Board */}
