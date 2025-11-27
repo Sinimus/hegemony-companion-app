@@ -1,6 +1,8 @@
 import { StateTreasury } from '@/components/calculators/StateTreasury';
 import { StateScoringCalc } from '@/components/calculators/StateScoringCalc';
 import { FactionReference } from '@/components/domain/FactionReference';
+import { WelfareBenefitCalc } from '@/components/calculators/MicroUtilityCalc';
+import { IMFRiskCalc } from '@/components/calculators/IMFRiskCalc'; // NEW IMPORT
 
 export function StateView() {
   return (
@@ -12,6 +14,10 @@ export function StateView() {
       <div className="grid gap-6 md:grid-cols-2">
         <StateTreasury />
         <StateScoringCalc />
+      </div>
+      <div className="grid gap-6 md:grid-cols-2"> {/* NEW ROW FOR WELFARE CALC */}
+        <WelfareBenefitCalc />
+        <IMFRiskCalc />
       </div>
       <FactionReference playerClass="state" />
     </div>
