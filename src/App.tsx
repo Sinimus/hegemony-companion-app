@@ -2,6 +2,7 @@ import { useViewStore } from '@/stores/useViewStore';
 import { useGameStore } from '@/stores/useGameStore';
 import { WelcomeView } from '@/views/WelcomeView';
 import { DashboardView } from '@/views/DashboardView';
+import { EndGameView } from '@/views/EndGameView';
 import { ClassSelector } from '@/components/layout/ClassSelector';
 import { AppFooter } from '@/components/layout/AppFooter';
 import { CapitalistView } from '@/views/CapitalistView';
@@ -34,6 +35,7 @@ function App() {
       <main className="p-4 md:px-8 max-w-4xl mx-auto animate-in fade-in duration-500">
         {currentView === 'welcome' && <WelcomeView />}
         {currentView === 'dashboard' && <DashboardView />}
+        {currentView === 'endgame' && <EndGameView />}
         {currentView === 'capitalist' && <CapitalistView />}
         {currentView === 'working' && <WorkingView />}
         {currentView === 'state' && <StateView />}

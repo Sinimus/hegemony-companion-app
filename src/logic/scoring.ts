@@ -1,6 +1,6 @@
-import { WEALTH_TRACK, PROSPERITY_LEVELS, getVpForNewProsperity, POLITICAL_AGENDA_POLICIES_1_5, POLITICAL_AGENDA_POLICIES_6_7 } from './scoringData';
+import { WEALTH_TRACK, PROSPERITY_LEVELS, getVpForNewProsperity, POLITICAL_AGENDA_POLICIES_1_5, POLITICAL_AGENDA_POLICIES_6_7, END_GAME_VP_ALIGNMENT, END_GAME_VP_CONVERSION } from './scoringData';
 import { WORKER_INCOME_TAX_RATES } from './taxData';
-import type { PolicyLevel, PolicyType } from '@/types/game';
+import type { PolicyLevel, PolicyType, PlayerClass } from '@/types/game';
 
 /**
  * Funkce pro výpočet VP Capitalist Class na základě aktuálního Capital.
@@ -183,4 +183,104 @@ export const calculateStateAgendaVp = (
 export const dropLegitimacy = (currentLevel: number): number => {
   // Zaokrouhlení nahoru (rounded up)
   return Math.ceil(currentLevel / 2);
+};
+
+/**
+ * Calculates VP from Policy Alignment (Policies P1-P5).
+ * @param policies The full current policy state.
+ * @param alignmentClass The class determining the target section (A, B, or C).
+ * @returns VP from alignment table lookup.
+ */
+const getPolicyAlignmentVp = (
+  policies: Record<PolicyType, PolicyLevel>,
+  alignmentClass: PolicyLevel // A for WC, B for MC, C for CC
+): number => {
+  const alignmentTarget = alignmentClass;
+  let matchingCount = 0;
+
+  // Check P1 through P5
+  const policiesToScan: PolicyType[] = ['fiscal', 'labor', 'tax', 'health', 'education'];
+  policiesToScan.forEach(policyId => {
+    if (policies[policyId] === alignmentTarget) {
+      matchingCount++;
+    }
+  });
+
+  const alignmentTable = END_GAME_VP_ALIGNMENT[alignmentTarget];
+  const entry = alignmentTable.find(row => row.policies === matchingCount);
+
+  return entry ? entry.vp : 0;
+};
+
+/**
+ * Calculates the total End-Game VP for a single class.
+ */
+export const calculateEndGameVp = (
+  playerClass: PlayerClass,
+  policies: Record<PolicyType, PolicyLevel>,
+  loanCount: number,
+  remainingMoney: number,
+  resourceValues: Record<string, number>, // { Food: 20, Luxury: 15, ... } - ASSUMED ¥ VALUE
+): {
+  policyVp: number;
+  moneyVp: number;
+  resourceVp: number;
+  loanPenalty: number;
+  totalVp: number;
+} => {
+  const conversion = END_GAME_VP_CONVERSION[playerClass];
+  let policyVp = 0;
+  let moneyVp = 0;
+  let resourceVp = 0;
+  let loanPenalty = 0;
+
+  // 1. Policy Alignment VP
+  const alignmentTarget = playerClass === 'working' ? 'A' : playerClass === 'middle' ? 'B' : 'C';
+  // State aligns with the highest matching policies to their agenda card in a tie-breaker, but for the table bonus, we use their default class ideology (B).
+  const policyAlignmentTarget = playerClass === 'state' ? 'B' : alignmentTarget;
+  policyVp = getPolicyAlignmentVp(policies, policyAlignmentTarget as PolicyLevel);
+
+  // 2. Money Conversion VP
+  if (playerClass !== 'capitalist') {
+    // WC, MC, State gain VP from remaining money
+    moneyVp = Math.floor(remainingMoney / conversion.moneyRate);
+    moneyVp = Math.min(moneyVp, conversion.moneyMaxVp);
+  }
+
+  // 3. Resource Conversion VP
+  let totalResourceValue = 0;
+
+  // Use simplified conversion rate based on average 1 VP / 15¥ value
+  for (const resourceType in resourceValues) {
+      if (conversion.resourceTypes.includes(resourceType)) {
+          totalResourceValue += resourceValues[resourceType];
+      }
+  }
+
+  // Simplified rule: 1 VP for every 15¥ value in resources (approximates 1/2 food + 1/3 others)
+  // State's Media Influence is treated as a resource here.
+  resourceVp = Math.floor(totalResourceValue / conversion.resourceRate);
+
+  // 4. Loan Penalty
+  if (loanCount > 0) {
+    if (playerClass === 'capitalist') {
+      // CC: -5 VP per Loan (no chance to pay off)
+      loanPenalty = loanCount * -5;
+    } else {
+      // WC, MC, State: -1 VP for every 5¥ they were unable to pay off (55¥/loan)
+      // Assuming they are unable to pay the full 55¥, the max penalty is 11 VP per loan.
+      const penaltyPerLoan = Math.ceil(55 / 5) * -1;
+      loanPenalty = loanCount * penaltyPerLoan;
+    }
+  }
+
+  const totalVp = policyVp + moneyVp + resourceVp + loanPenalty;
+
+  return {
+    policyVp,
+    moneyVp,
+    resourceVp,
+    loanPenalty,
+    totalVp
+  };
 };
