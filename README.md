@@ -243,12 +243,6 @@ pnpm lint         # Run ESLint
 
 This project is open source and available under the GNU Affero General Public License v3.0 (AGPL). See [LICENSE](LICENSE) for details.
 
-## 📧 Author
-
-**Created by:** Sinimus
-**Contact:** l.walek@proton.me
-**GitHub:** [@Sinimus](https://github.com/Sinimus)
-
 ---
 
 > **🎲 Disclaimer**: This is an unofficial tool created by a fan for the Hegemony community. All Hegemony game rules, terminology, and intellectual property belong to their respective owners. This app is not affiliated with or endorsed by the game's publisher.

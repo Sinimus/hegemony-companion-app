@@ -448,4 +448,4 @@ echo "🎉 Hegemony Companion deployed! Visit http://localhost:3000"
 
 **🎯 That's it!** Your Hegemony Companion App is now deployed and ready to help players conquer the economic battlefield! 🏛️📊
 
-For support, visit the [GitHub repository](https://github.com/Sinimus/hegemony-companion-app) or contact [Sinimus](mailto:l.walek@proton.me).
+For support, visit the [GitHub repository](https://github.com/Sinimus/hegemony-companion-app) or contact [Sinimus](mailto:sinimus@noreply).

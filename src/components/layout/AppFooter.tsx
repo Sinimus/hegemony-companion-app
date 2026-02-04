@@ -20,9 +20,9 @@ export function AppFooter() {
           {/* Author Links */}
           <div className="flex items-center gap-4">
             <a
-              href="mailto:l.walek@proton.me"
+              href="mailto:sinimus@noreply"
               className="flex items-center gap-1 text-neutral-400 hover:text-white transition-colors"
-              title="Email author"
+              title="Email support"
             >
               <Mail className="w-4 h-4" />
               <span className="hidden sm:inline">Contact</span>
