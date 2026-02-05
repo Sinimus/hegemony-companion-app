@@ -2,8 +2,6 @@
 
 A comprehensive digital assistant for the **Hegemony** board game - your ultimate companion for economic strategy, policy management, and victory point calculations.
 
-> **⚠️ Copyright Notice**: This is an unofficial fan-made companion app. Hegemony board game and all related intellectual property belong to their respective publisher and creators. This tool is provided for educational and entertainment purposes only.
-
 ## 🎮 About Hegemony
 
 Hegemony is an asymmetric economic simulation board game where players represent different social classes (Working, Middle, Capitalist, State) competing for influence and prosperity through policy decisions, economic management, and political maneuvering.
@@ -49,12 +47,8 @@ Hegemony is an asymmetric economic simulation board game where players represent
 - Intuitive navigation with visual class indicators
 - Real-time state persistence
 
-## 🚀 Quick Start
 
-### Online Version
-Visit the live app (if deployed) or run locally using Docker (see below).
-
-### Local Development
+### Installation
 ```bash
 # Clone the repository
 git clone https://github.com/Sinimus/hegemony-companion-app.git
@@ -67,33 +61,6 @@ pnpm install
 pnpm dev
 
 # Visit http://localhost:5173
-```
-
-### Using Docker (Recommended)
-```bash
-# Pull from GitHub Container Registry
-docker pull ghcr.io/sinimus/hegemony-companion-app:latest
-
-# Run the app
-docker run -p 3000:3000 ghcr.io/sinimus/hegemony-companion-app:latest
-
-# Visit http://localhost:3000
-```
-
-## 📖 Comprehensive Deployment Guide
-
-📋 **See [DEPLOYMENT.md](DEPLOYMENT.md)** for detailed instructions on deploying to:
-
-- 🏠 **Home Lab**: Docker Desktop, Docker Compose, Watchtower
-- 🖥️ **Unraid + Portainer**: UI deployment, webhooks, auto-updates
-- ☁️ **Cloud VPS**: DigitalOcean, AWS ECS, Google Cloud Run, Azure
-- 🛠️ **Self-Hosted**: Coolify, Plesk, cPanel
-- 🔧 **Kubernetes**: Minikube, production deployments
-- 🔄 **Auto-Deploy**: GitHub Actions webhooks for zero-downtime updates
-
-**One-command deployment:**
-```bash
-docker run -d --name hegemony-companion -p 3000:3000 --restart unless-stopped ghcr.io/sinimus/hegemony-companion-app:latest
 ```
 
 ## 📋 How to Use
@@ -133,55 +100,6 @@ docker run -d --name hegemony-companion -p 3000:3000 --restart unless-stopped gh
 - **Build Tools**: pnpm package manager
 - **Architecture**: Type-safe functional programming with pure logic layers
 
-## 🐳 Deployment
-
-### Docker Deployment
-The application is containerized and ready for production deployment:
-
-#### Option 1: GitHub Container Registry (Recommended)
-```bash
-# Pull pre-built image
-docker pull ghcr.io/sinimus/hegemony-companion-app:latest
-
-# Run with exposed port
-docker run -d -p 3000:3000 --name hegemony-companion ghcr.io/sinimus/hegemony-companion-app:latest
-```
-
-#### Option 2: Build from Source
-```bash
-# Clone and build
-git clone https://github.com/Sinimus/hegemony-companion-app.git
-cd hegemony-companion-app
-docker build -t hegemony-companion .
-
-# Run
-docker run -d -p 3000:3000 hegemony-companion
-```
-
-#### Environment Variables
-```bash
-# Optional: Set custom port
-docker run -d -p 8080:3000 hegemony-companion
-
-# With custom name
-docker run -d -p 3000:3000 --name my-hegemony-app hegemony-companion
-```
-
-#### Production Considerations
-- The app serves static files only (no backend required)
-- All game state is stored locally in the browser
-- Suitable for hosting on any container platform (Docker Swarm, Kubernetes, cloud services)
-- No environment variables required - works out of the box
-
-### Manual Deployment
-```bash
-# Build for production
-pnpm build
-
-# The built files are in ./dist/
-# Serve with any static file server:
-npx serve dist -p 3000
-```
 
 ## 🎯 Game Compatibility
 
@@ -231,13 +149,7 @@ src/
 └── views/               # Page components
 ```
 
-### Available Scripts
-```bash
-pnpm dev          # Start development server
-pnpm build        # Build for production
-pnpm preview      # Preview production build
-pnpm lint         # Run ESLint
-```
+
 
 ## 📜 License
 
