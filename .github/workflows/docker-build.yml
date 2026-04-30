@@ -1,21 +1,18 @@
-# .github/workflows/docker-build.yml
-
-name: Docker Build & Push to GHCR
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    
-    # CRITICAL FIX 1: Add explicit permissions for writing to GHCR
     permissions:
       contents: read
       packages: write
-      
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,33 +20,37 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container Registry (GHCR)
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # CRITICAL FIX 2: Define image metadata and force tag to lowercase
-      - name: Define Image Metadata (Lowercase Repository Name)
+      - name: Define Image Metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # Use lowercased repository name for Docker tag compatibility
-          images: ghcr.io/${{ github.repository }} 
+          images: ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=latest
             type=sha,format=short
-          # The output tags are automatically lowercased by metadata-action's logic
-          # for repository names used in GHCR contexts.
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile
           push: true
-          # Use the generated tags from the metadata step
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+
+      - name: Trigger Coolify Deploy
+        env:
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
+            "https://coolify.sinimus.com/api/v1/deploy?uuid=${{ secrets.COOLIFY_APP_UUID }}&force=false")
+          echo "Coolify deploy response: $HTTP_STATUS"
+          [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ] || exit 1
