@@ -49,7 +49,7 @@ jobs:
         env:
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
         run: |
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
             -H "Authorization: Bearer $COOLIFY_TOKEN" \
             "https://coolify.sinimus.com/api/v1/deploy?uuid=${{ secrets.COOLIFY_APP_UUID }}&force=false")
           echo "Coolify deploy response: $HTTP_STATUS"
