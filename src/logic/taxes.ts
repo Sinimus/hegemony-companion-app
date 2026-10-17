@@ -1,17 +1,16 @@
 import type { PolicyLevel } from '@/types/game';
 
+// Loans at which the IMF intervenes in Check IMF if the State cannot pay them off (Fiscal Policy, p. 30).
+export const IMF_LOAN_THRESHOLD: Record<PolicyLevel, number> = { A: 2, B: 2, C: 1 };
+
 /**
- * Calculates the maximum safe loan limit for The State based on Fiscal Policy (P1).
- * IMF Intervention is triggered if the State has more loans than this limit (AND cannot pay 55¥/loan).
- * P1 A/B: Max 5 Loans
- * P1 C: Max 3 Loans
+ * Whether the State reaches the IMF intervention threshold for the current Fiscal Policy
+ * (Check IMF step of the Production Phase, p. 12). The IMF intervenes when the State holds
+ * at least the threshold number of Loans and cannot pay them off at 55 each at that moment.
+ * Interest has nothing to do with it.
+ * @param stateLoans Number of Loans the State currently holds.
  * @param fiscalPolicy Current Fiscal Policy (P1).
- * @returns Maximum safe loan count.
  */
-export const getIMFLoanLimit = (fiscalPolicy: PolicyLevel): number => {
-    if (fiscalPolicy === 'C') {
-        return 3;
-    }
-    // A and B allow more liberal borrowing, typically up to 5 loans.
-    return 5;
-};
+export function isImfInterventionDue(stateLoans: number, fiscalPolicy: PolicyLevel): boolean {
+    return stateLoans >= IMF_LOAN_THRESHOLD[fiscalPolicy];
+}
