@@ -11,7 +11,7 @@ export function ProductionCalc() {
 
   // Recalculate costs based on automation
   let costs = calculateProductionCost(companies, policies.labor);
-  let employmentTax = calculateEmploymentTax(companies, policies.tax, policies.health, policies.education);
+  const employmentTax = calculateEmploymentTax(companies, policies.tax, policies.health, policies.education);
 
   if (isAutomated) {
     // Automated Company / Company with Machinery Token:

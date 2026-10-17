@@ -36,7 +36,7 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
 
     // Convert units to estimated money value for scoring purposes
     const calculateResourceValues = () => {
-        let totalValue: Record<string, number> = {};
+        const totalValue: Record<string, number> = {};
         for (const key in resources) {
             totalValue[key] = resources[key] * (RESOURCE_PRICES[key as keyof typeof RESOURCE_PRICES] || 1);
         }

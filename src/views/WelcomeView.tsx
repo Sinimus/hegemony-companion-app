@@ -69,8 +69,8 @@ function InstructionsSection() {
     );
 }
 
-function GlossarySection() {
-    const GlossaryCategory = ({ title, items, color }: { title: string; items: GlossaryItem[]; color: string }) => (
+function GlossaryCategory({ title, items, color }: { title: string; items: GlossaryItem[]; color: string }) {
+    return (
         <Card className={`border-${color}/50 bg-neutral-900/50`}>
             <CardHeader className={`border-b border-${color}/30`}>
                 <CardTitle className={`text-lg text-${color}`}>{title}</CardTitle>
@@ -86,8 +86,10 @@ function GlossarySection() {
             </CardContent>
         </Card>
     );
+}
 
-    const AcronymsSection = () => (
+function AcronymsSection() {
+    return (
         <Card className="border-neutral-700/50 bg-neutral-900/50">
             <CardHeader className="border-b border-neutral-800">
                 <CardTitle className="text-lg text-cyan-400">Quick Acronyms</CardTitle>
@@ -105,7 +107,9 @@ function GlossarySection() {
             </CardContent>
         </Card>
     );
+}
 
+function GlossarySection() {
     return (
         <div className="space-y-6">
             <Card className="border-neutral-700/50 bg-neutral-900/50">
