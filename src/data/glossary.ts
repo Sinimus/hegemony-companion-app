@@ -19,43 +19,43 @@ export const ACRONYMS: Record<string, string> = {
 
 export const CORE_GLOSSARY: GlossaryItem[] = [
     {
-        term: 'Policy Board',
-        definition: 'The main section detailing the 7 policies, ranging from Socialism/Nationalism (A) to Neoliberalism/Globalism (C).',
-        source: 'Rules [891-894]'
+        term: 'Politics Table',
+        definition: 'Seven Policies, each in section A, B or C. Policies 1-5 run from Socialism (A) to Neoliberalism (C), Policies 6-7 from Nationalism (A) to Globalism (C).',
+        source: 'Rulebook v1.2, p. 6'
     },
     {
         term: 'Prosperity',
-        definition: 'The Working Class and Middle Class primary VP source, gained equal to the new Prosperity value after spending Health, Education, or Luxury.',
-        source: 'Rules [1001-1002, 1015-1016]'
+        definition: 'Main VP source of the Working and Middle Class: each step up scores the new track value. It drops in the Preparation Phase (Working Class by 1, Middle Class by 2) without losing VP.',
+        source: 'Rulebook v1.2, p. 14, 16, 22, 24'
     },
     {
         term: 'Legitimacy',
-        definition: 'The State\'s primary VP source. The State scores VP equal to the sum of the two lowest scores tracked across the three classes.',
-        source: 'Rules [1035-1037]'
+        definition: 'The State tracks it for each Class. In the Scoring Phase the State scores the two lowest values together, then every track drops to half (rounded up).',
+        source: 'Rulebook v1.2, p. 28-29'
     },
     {
         term: 'Capital (CC)',
-        definition: 'The Capitalist Class\'s taxed money area. Funds moved here during the Scoring Phase generate Wealth Track VP.',
-        source: 'Rules [1026-1029]'
+        definition: 'After wages and taxes, the Capitalist Class moves its Revenue into Capital and scores Capital on the Wealth table.',
+        source: 'Rulebook v1.2, p. 7, 21'
     },
     {
         term: 'IMF Intervention',
-        definition: 'Triggered if the State has more Loans than Fiscal Policy (P1) allows and cannot pay them off. Leads to forced policy changes (Austerity, L1 Wages).',
-        source: 'Rules [1295-1298, 2580-2596]'
+        definition: 'If in Check IMF the State holds as many Loans as Fiscal Policy tolerates (1 in C, 2 in A or B) and cannot pay them off, the IMF changes several Policies, forces Wages to L1 and halves Legitimacy.',
+        source: 'Rulebook v1.2, p. 12, 30, 33'
     },
     {
         term: 'Tax Multiplier (TM)',
-        definition: 'A dynamic value (Max 11) derived from policies P3, P4, and P5. Used to calculate Employment Tax for Capitalist and Middle Class companies.',
-        source: 'Rules [933-935, 2408-2415]'
+        definition: 'Taxation sets the base (3, 2 or 1) and whether the Health and Education modifiers count double, normally or not at all; at most 11, 5 at the start. Capitalist and Middle Class pay it per operational Company as Employment Tax.',
+        source: 'Rulebook v1.2, p. 8, 20, 25, 30-31'
     },
 ];
 
 export const POLICY_GLOSSARY: GlossaryItem[] = [
-    { term: 'Fiscal Policy (P1)', definition: 'Controls the size of the Public Sector and the number of Loans that trigger IMF intervention.', source: 'Rules [2361-2362]' },
-    { term: 'Labor Market (P2)', definition: 'Sets the minimum allowable Wage (L1, L2, or L3). Directly impacts Income Tax calculation.', source: 'Rules [2384-2388]' },
-    { term: 'Taxation (P3)', definition: 'Determines Corporate and Income Tax rates, and sets the base value and modifier effect of the Tax Multiplier.', source: 'Rules [2404-2415]' },
-    { term: 'Welfare State: Health (P4)', definition: 'Determines the cost of Public Health and provides a modifier (+0 to +2) to the Tax Multiplier.', source: 'Rules [2430-2436]' },
-    { term: 'Welfare State: Education (P5)', definition: 'Determines the cost of Public Education and provides a modifier (+0 to +2) to the Tax Multiplier.', source: 'Rules [2469-2473]' },
-    { term: 'Foreign Trade (P6)', definition: 'Determines import tariffs (paid to the State) and the number of Business Deal cards available.', source: 'Rules [2482-2495]' },
-    { term: 'Immigration (P7)', definition: 'Controls the influx of new Workers for the Working and Middle Classes.', source: 'Rules [2514-2517]' },
+    { term: 'Fiscal Policy (P1)', definition: 'Number of Public Companies (9, 6 or 3) and the number of State Loans at which the IMF intervenes.', source: 'Rulebook v1.2, p. 30' },
+    { term: 'Labor Market (P2)', definition: 'Lowest Wage level allowed on Company cards (A: L3 only, B: L2 or L3, C: any). Also selects the row of the Income Tax table.', source: 'Rulebook v1.2, p. 30' },
+    { term: 'Taxation (P3)', definition: 'Selects the tax tables for each Class and sets the base and the modifier rule of the Tax Multiplier.', source: 'Rulebook v1.2, p. 30-31' },
+    { term: 'Welfare State: Health & Benefits (P4)', definition: 'Price of Public Health (free, 5 or 10) and its Tax Multiplier modifier (+2, +1 or none).', source: 'Rulebook v1.2, p. 31' },
+    { term: 'Welfare State: Education (P5)', definition: 'Price of Public Education (free, 5 or 10) and its Tax Multiplier modifier (+2, +1 or none).', source: 'Rulebook v1.2, p. 31-32' },
+    { term: 'Foreign Trade (P6)', definition: 'Tariffs on imported Food and Luxury, paid to the State, and the number of Business Deal cards each round.', source: 'Rulebook v1.2, p. 32' },
+    { term: 'Immigration (P7)', definition: 'Extra Workers each round for the Working and Middle Class on top of their 2: none in A, 1 in B, 2 in C.', source: 'Rulebook v1.2, p. 32' },
 ];

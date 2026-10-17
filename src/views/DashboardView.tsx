@@ -25,7 +25,7 @@ export function DashboardView() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <header className="text-center">
         <h2 className="text-3xl font-black text-white mb-2">Policy Overview & Impact</h2>
-        <p className="text-neutral-400">Real-time economic synthesis based on current global policies.</p>
+        <p className="text-neutral-400">What the current Policies mean for taxes, prices and Workers.</p>
       </header>
 
       {/* Policy effects at a glance */}

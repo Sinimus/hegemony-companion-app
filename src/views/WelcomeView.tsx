@@ -13,19 +13,19 @@ function InstructionsSection() {
         {
             icon: Settings,
             title: 'Set Policies',
-            description: 'Navigate to Policies (Dashboard) and use the interactive board to set the 7 Global Policies (P1-P7) to match the physical game board. The economic overview on this page updates instantly to show the real-time impact on the Tax Multiplier and State Fiscal Balance.',
+            description: 'Navigate to Policies (Dashboard) and use the interactive board to set the 7 Global Policies (P1-P7) to match the physical game board. The tiles above the board show what the current Policies mean: Tax Multiplier, allowed Wage levels, Income Tax rate, public service prices, tariffs and new Workers.',
             color: 'text-yellow-400'
         },
         {
             icon: Users,
             title: 'Select Faction',
-            description: 'Use the navigation bar to select your faction (Working, Middle, Capitalist, or State).',
+            description: 'Pick the number of players at the top (2: Working and Capitalist Class, 3: plus Middle Class, 4: plus State, p. 8), then your Class in the navigation bar.',
             color: 'text-green-400'
         },
         {
             icon: Target,
             title: 'Use Tools',
-            description: 'In your faction\'s view, use the various Calculators (e.g., Worker Budget, Production Calc, Wealth Calc) to simulate turn actions and VP gains.',
+            description: 'In your faction\'s view, use the calculators (taxes, Wealth Track, Prosperity, End Game) to work out payments and VP. Values the rulebook only shows as images are marked as not verified.',
             color: 'text-purple-400'
         },
     ];
