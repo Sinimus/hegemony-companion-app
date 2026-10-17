@@ -20,13 +20,14 @@ export function WorkingProsperityCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-green-400 flex items-center gap-2">
-        📈 Prosperity Score
+        <span aria-hidden="true">📈</span> Prosperity Score
       </h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Current Prosperity Level</label>
+          <label htmlFor="wpc-level" className="text-xs uppercase text-neutral-500 font-bold">Current Prosperity Level</label>
           <select
+            id="wpc-level"
             value={currentLevel}
             onChange={(e) => setCurrentLevel(Number(e.target.value))}
             className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
@@ -37,8 +38,9 @@ export function WorkingProsperityCalc() {
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Action to Perform</label>
+          <label htmlFor="wpc-action" className="text-xs uppercase text-neutral-500 font-bold">Action to Perform</label>
           <select
+            id="wpc-action"
             value={action}
             onChange={(e) => setAction(e.target.value as ProsperityAction)}
             className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"

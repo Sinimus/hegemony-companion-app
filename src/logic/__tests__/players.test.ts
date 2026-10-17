@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getActiveClasses, isClassActive, playerCountFromHash, playerCountToHash } from '@/logic/players';
+import { getActiveClasses, isClassActive, playerCountFromHash, playerCountToSetup } from '@/logic/players';
 
 // Game Setup, Hegemony Rulebook v1.2, p. 8: 2 players play the Capitalist Class and the
 // Working Class; 3 players add the Middle Class; 4 players add the State.
@@ -25,13 +25,18 @@ describe('active classes by player count (Game Setup, p. 8)', () => {
 });
 
 describe('player count in the page address', () => {
-  it('writes #2p, #3p and #4p', () => {
-    expect(playerCountToHash(2)).toBe('#2p');
-    expect(playerCountToHash(4)).toBe('#4p');
+  it('writes the setup segment 2p, 3p and 4p', () => {
+    expect(playerCountToSetup(2)).toBe('2p');
+    expect(playerCountToSetup(4)).toBe('4p');
   });
 
   it('reads back what it writes', () => {
     expect(playerCountFromHash('#3p')).toBe(3);
+  });
+
+  it('reads only the setup segment', () => {
+    expect(playerCountFromHash('#4p/policies')).toBe(4);
+    expect(playerCountFromHash('#/endgame')).toBeNull();
   });
 
   it('ignores anything else', () => {

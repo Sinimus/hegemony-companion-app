@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { PolicyType, PolicyLevel } from '@/types/game';
-import { playerCountFromHash, playerCountToHash, type PlayerCount } from '@/logic/players';
+import { playerCountFromSetup, playerCountToSetup, type PlayerCount } from '@/logic/players';
+import { buildHash, parseHash, type Route, type Screen } from '@/logic/route';
 
 // Policies used to be persisted; drop the stale copy so it cannot confuse anyone.
 try {
@@ -26,34 +27,53 @@ export const UNVERIFIED_START_POLICIES: readonly PolicyType[] = ['labor', 'trade
 interface GameState {
   policies: Record<PolicyType, PolicyLevel>;
   setPolicy: (policy: PolicyType, level: PolicyLevel) => void;
+  setup: string;
+  screen: Screen;
   playerCount: PlayerCount;
+  setScreen: (screen: Screen) => void;
   setPlayerCount: (count: PlayerCount) => void;
   resetGame: () => void;
 }
 
 const DEFAULT_PLAYER_COUNT: PlayerCount = 4;
 
-function readPlayerCount(): PlayerCount {
-  return playerCountFromHash(globalThis.location?.hash ?? '') ?? DEFAULT_PLAYER_COUNT;
+function readRoute(): Route {
+  return parseHash(globalThis.location?.hash ?? '');
 }
 
-function writePlayerCount(count: PlayerCount): void {
-  globalThis.history?.replaceState(null, '', playerCountToHash(count));
-}
+// An address without a setup segment keeps the default player count and is not
+// rewritten until the user changes something.
+const initialRoute = readRoute();
 
-export const useGameStore = create<GameState>((set) => ({
+export const useGameStore = create<GameState>((set, get) => ({
   policies: INITIAL_POLICIES,
   setPolicy: (policy, level) =>
     set((state) => ({ policies: { ...state.policies, [policy]: level } })),
-  playerCount: readPlayerCount(),
+  setup: initialRoute.setup,
+  screen: initialRoute.screen,
+  playerCount: playerCountFromSetup(initialRoute.setup) ?? DEFAULT_PLAYER_COUNT,
+  setScreen: (screen) => {
+    // A screen change is navigation: it goes through the address and creates a
+    // history entry, so browser Back returns to the previous screen.
+    if (globalThis.location) {
+      globalThis.location.hash = buildHash({ setup: get().setup, screen });
+    }
+    set({ screen });
+  },
   setPlayerCount: (count) => {
-    writePlayerCount(count);
-    set({ playerCount: count });
+    // Changing the setup is not navigation: replace the address, no history entry.
+    globalThis.history?.replaceState(null, '', buildHash({ setup: playerCountToSetup(count), screen: get().screen }));
+    set({ setup: playerCountToSetup(count), playerCount: count });
   },
   resetGame: () => set({ policies: INITIAL_POLICIES }),
 }));
 
-// Follow edits of the address (a pasted or edited link).
+// Follow edits of the address (navigation, a pasted or edited link).
 globalThis.addEventListener?.('hashchange', () => {
-  useGameStore.setState({ playerCount: readPlayerCount() });
+  const route = readRoute();
+  useGameStore.setState({
+    setup: route.setup,
+    screen: route.screen,
+    playerCount: playerCountFromSetup(route.setup) ?? DEFAULT_PLAYER_COUNT,
+  });
 });

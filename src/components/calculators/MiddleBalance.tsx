@@ -7,6 +7,7 @@ import {
   getIncomeTaxRate,
 } from '@/logic/economics';
 import { isIncomeTaxRateVerified } from '@/logic/taxData';
+import { formatDeduction } from '@/lib/format';
 
 export function MiddleBalance() {
   const { policies } = useGameStore();
@@ -28,7 +29,7 @@ export function MiddleBalance() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-class-middle flex items-center gap-2">
-        ⚖️ Middle Class Taxes
+        <span aria-hidden="true">⚖️</span> Middle Class Taxes
       </h3>
 
       <div className="space-y-4">
@@ -85,14 +86,14 @@ export function MiddleBalance() {
         <div className="space-y-2 pt-4 border-t border-neutral-800">
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Income Tax ({rate} per Company, P2 {policies.labor} / P3 {policies.tax})</span>
-            <span className="text-red-400 font-mono">-{incomeTax}</span>
+            <span className="text-red-400 font-mono">{formatDeduction(incomeTax)}</span>
           </div>
           {!isIncomeTaxRateVerified(policies.labor, policies.tax) && (
             <p className="text-xs text-amber-400/80">Tax rate from the player aid table; not verified against the rules text.</p>
           )}
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Employment Tax (TM {taxMultiplier})</span>
-            <span className="text-red-400 font-mono">-{employmentTax}</span>
+            <span className="text-red-400 font-mono">{formatDeduction(employmentTax)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Corporate Tax: none for the Middle Class (p. 25)</span>

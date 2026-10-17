@@ -7,9 +7,9 @@ export function PolicyBoard() {
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
-      <h2 className="text-xl font-bold text-center text-neutral-100 mb-6 uppercase tracking-widest border-b border-neutral-800 pb-4">
+      <h3 className="text-xl font-bold text-center text-neutral-100 mb-6 uppercase tracking-widest border-b border-neutral-800 pb-4">
         State Policies
-      </h2>
+      </h3>
       {POLICIES.map((policy) => (
         <PolicyRow
           key={policy.id}

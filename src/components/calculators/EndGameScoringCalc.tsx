@@ -24,6 +24,14 @@ const START_MONEY: Record<PlayerClass, number> = {
     state: 120,
 };
 
+// Static class-name lookup: Tailwind never generates classes built from variables
+const CLASS_TITLE: Record<PlayerClass, string> = {
+    working: 'text-class-working',
+    middle: 'text-class-middle',
+    capitalist: 'text-class-capitalist',
+    state: 'text-class-state',
+};
+
 // Helper component for class-specific inputs
 const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
     const { policies } = useGameStore();
@@ -45,20 +53,20 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
 
     return (
         <Card className="p-4 space-y-3 border-neutral-700/50">
-            <h4 className={`text-lg font-bold uppercase text-class-${playerClass}`}>
+            <h4 className={`text-lg font-bold uppercase ${CLASS_TITLE[playerClass]}`}>
                 {playerClass} Class
             </h4>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="space-y-2">
                     <label htmlFor={`endgame-${playerClass}-money`} className="text-xs uppercase text-neutral-500 font-bold flex items-center">
-                        <Coins className="w-3 h-3 mr-1" /> Money (¥)
+                        <Coins className="w-3 h-3 mr-1" aria-hidden="true" /> Money (¥)
                     </label>
                     <input id={`endgame-${playerClass}-money`} type="number" value={money} onChange={e => setMoney(Number(e.target.value))} className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white" />
                 </div>
                 <div className="space-y-2">
                     <label htmlFor={`endgame-${playerClass}-loans`} className="text-xs uppercase text-neutral-500 font-bold flex items-center">
-                        <AlertTriangle className="w-3 h-3 mr-1 text-red-400" /> Loans
+                        <AlertTriangle className="w-3 h-3 mr-1 text-red-400" aria-hidden="true" /> Loans
                     </label>
                     <input id={`endgame-${playerClass}-loans`} type="number" min="0" value={loans} onChange={e => setLoans(Number(e.target.value))} className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white" />
                 </div>
@@ -132,7 +140,7 @@ export function EndGameScoringCalc() {
             <Card className="bg-neutral-900/50 border-blue-400/50">
                 <CardHeader className="border-b border-blue-400/30">
                     <CardTitle className="flex items-center gap-2 text-xl text-blue-400">
-                        <Trophy className="w-6 h-6" />
+                        <Trophy className="w-6 h-6" aria-hidden="true" />
                         End-Game Scoring Simulator
                     </CardTitle>
                 </CardHeader>

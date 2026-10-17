@@ -21,7 +21,7 @@ export function IMFRiskCalc() {
     return (
         <Card className={cn("p-4 space-y-3", isDue ? 'border-red-500/50 bg-red-900/10' : 'border-neutral-800/50 bg-neutral-900/50')}>
             <h4 className="text-sm font-bold text-neutral-200 flex items-center gap-2">
-                <AlertOctagon className={cn("w-4 h-4", statusColor)} /> IMF Intervention Risk
+                <AlertOctagon className={cn("w-4 h-4", statusColor)} aria-hidden="true" /> IMF Intervention Risk
             </h4>
 
             <div className="space-y-2">
@@ -33,7 +33,7 @@ export function IMFRiskCalc() {
 
             <div className="pt-2 border-t border-neutral-800 space-y-3">
                 <div className="text-sm text-neutral-400 flex items-center">
-                    <Landmark className="w-4 h-4 mr-1 text-class-state" />
+                    <Landmark className="w-4 h-4 mr-1 text-class-state" aria-hidden="true" />
                     IMF intervenes at {threshold} Loan(s) with Fiscal Policy {policies.fiscal} (p. 30)
                 </div>
 

@@ -13,7 +13,7 @@ export function TradeUnionVpCalc() {
     return (
         <Card className="p-4 space-y-3 border-neutral-800/50">
             <h4 className="text-sm font-bold text-class-working flex items-center gap-2">
-                <Users className="w-4 h-4" /> Trade Union VP (Scoring)
+                <Users className="w-4 h-4" aria-hidden="true" /> Trade Union VP (Scoring)
             </h4>
             <div className="flex justify-between items-center">
                 <label htmlFor="trade-unions" className="text-sm text-neutral-400">WC Unions on Board</label>
@@ -40,7 +40,7 @@ export function WelfareBenefitCalc() {
     return (
         <Card className="p-4 space-y-3 border-neutral-800/50">
             <h4 className="text-sm font-bold text-class-state flex items-center gap-2">
-                <Scale className="w-4 h-4" /> Welfare Benefits (State)
+                <Scale className="w-4 h-4" aria-hidden="true" /> Welfare Benefits (State)
             </h4>
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">

@@ -6,12 +6,12 @@ import type { PolicyDef } from '@/data/policies';
 import { calculateStateLegitimacyVp, calculateStateAgendaVp, dropLegitimacy } from '@/logic/scoring';
 import { Users, Briefcase, Home } from 'lucide-react';
 
-// Konstanty pro simulaci Politické agendy
+// Constants for the Political Agenda simulation
 const DEFAULT_AGENDA: Record<PolicyType, PolicyLevel> = {
   fiscal: 'A', labor: 'B', tax: 'A', health: 'B', education: 'C', trade: 'A', immigration: 'B',
 };
 
-// Pomocná komponenta pro selektor Policy Level (pro Agenda UI)
+// Helper component for selecting a Policy Level (Agenda UI)
 const PolicyLevelSelector = ({
   policy,
   currentLevel,
@@ -46,24 +46,24 @@ const PolicyLevelSelector = ({
 export function StateScoringCalc() {
   const { policies } = useGameStore();
 
-  // Stav pro simulaci aktuálních hodnot Legitimacy
+  // State for simulating the current Legitimacy values
   const [wcLeg, setWcLeg] = useState(2);
   const [mcLeg, setMcLeg] = useState(2);
   const [ccLeg, setCcLeg] = useState(2);
-  // Stav pro simulaci Politické Agendy
+  // State for simulating the Political Agenda
   const [agenda, setAgenda] = useState(DEFAULT_AGENDA);
 
-  // VP Kalkulace
+  // VP calculation
   const legitimacyVp = calculateStateLegitimacyVp(wcLeg, mcLeg, ccLeg);
   const agendaVp = calculateStateAgendaVp(policies, agenda);
   const totalVp = legitimacyVp + agendaVp;
 
-  // Simulace snížení Legitimacy pro příští kolo
+  // Simulate the Legitimacy drop for the next round
   const nextWcLeg = dropLegitimacy(wcLeg);
   const nextMcLeg = dropLegitimacy(mcLeg);
   const nextCcLeg = dropLegitimacy(ccLeg);
 
-  // Funkce pro aktualizaci agendy
+  // Update one agenda policy
   const setAgendaPolicy = (type: PolicyType, level: PolicyLevel) => {
     setAgenda(prev => ({ ...prev, [type]: level }));
   };
@@ -71,17 +71,19 @@ export function StateScoringCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-indigo-400 flex items-center gap-2">
-        👑 VP Scoring Phase
+        <span aria-hidden="true">👑</span> VP Scoring Phase
       </h3>
 
-      {/* Část 1: Legitimacy Scoring */}
+      {/* Part 1: Legitimacy Scoring */}
       <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
         <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">1. Legitimacy Check & Drop</h4>
 
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="flex flex-col items-center">
-            <Users className="w-5 h-5 text-green-400 mb-1" />
+            <Users className="w-5 h-5 text-green-400 mb-1" aria-hidden="true" />
+            <label htmlFor="state-leg-working" className="text-[11px] text-neutral-400 mb-1">Working</label>
             <input
+              id="state-leg-working"
               type="number"
               min="0"
               max="10"
@@ -91,8 +93,10 @@ export function StateScoringCalc() {
             />
           </div>
           <div className="flex flex-col items-center">
-            <Home className="w-5 h-5 text-purple-400 mb-1" />
+            <Home className="w-5 h-5 text-purple-400 mb-1" aria-hidden="true" />
+            <label htmlFor="state-leg-middle" className="text-[11px] text-neutral-400 mb-1">Middle</label>
             <input
+              id="state-leg-middle"
               type="number"
               min="0"
               max="10"
@@ -102,8 +106,10 @@ export function StateScoringCalc() {
             />
           </div>
           <div className="flex flex-col items-center">
-            <Briefcase className="w-5 h-5 text-amber-400 mb-1" />
+            <Briefcase className="w-5 h-5 text-amber-400 mb-1" aria-hidden="true" />
+            <label htmlFor="state-leg-capitalist" className="text-[11px] text-neutral-400 mb-1">Capitalist</label>
             <input
+              id="state-leg-capitalist"
               type="number"
               min="0"
               max="10"
@@ -123,11 +129,11 @@ export function StateScoringCalc() {
         </div>
       </div>
 
-      {/* Část 2: Political Agenda Scoring */}
+      {/* Part 2: Political Agenda Scoring */}
       <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
         <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">2. Political Agenda Match ({agendaVp} / 7 VP)</h4>
 
-        {/* Simulátor Policy Agendy (všechny politiky) */}
+        {/* Policy Agenda simulator (all policies) */}
         <div className="mb-2">
           {POLICIES.map(p => (
             <PolicyLevelSelector
@@ -148,7 +154,7 @@ export function StateScoringCalc() {
         </div>
       </div>
 
-      {/* Celkový součet VP */}
+      {/* Total VP sum */}
       <div className="flex justify-between text-xl font-black pt-2 border-t border-neutral-800">
         <span className="text-neutral-200">Total VP from Scoring Phase</span>
         <span className="text-indigo-400">+{totalVp}</span>

@@ -6,6 +6,7 @@ import {
   getIncomeTaxRate,
 } from '@/logic/economics';
 import { isIncomeTaxRateVerified } from '@/logic/taxData';
+import { formatDeduction } from '@/lib/format';
 
 export function WorkerBudget() {
   const { policies } = useGameStore();
@@ -20,7 +21,7 @@ export function WorkerBudget() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-class-working flex items-center gap-2">
-        ☭ Working Class Taxes
+        <span aria-hidden="true">☭</span> Working Class Taxes
       </h3>
 
       <div className="space-y-4">
@@ -53,7 +54,7 @@ export function WorkerBudget() {
         <div className="space-y-2 pt-4 border-t border-neutral-800">
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Income Tax ({rate} per Population, P2 {policies.labor} / P3 {policies.tax})</span>
-            <span className="text-red-400 font-mono">-{incomeTax}</span>
+            <span className="text-red-400 font-mono">{formatDeduction(incomeTax)}</span>
           </div>
           {!isIncomeTaxRateVerified(policies.labor, policies.tax) && (
             <p className="text-xs text-amber-400/80">Tax rate from the player aid table; not verified against the rules text.</p>
