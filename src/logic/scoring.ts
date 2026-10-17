@@ -303,16 +303,14 @@ export const calculateEndGameVp = (
   totalVp: number;
 } => {
   const conversion = END_GAME_VP_CONVERSION[playerClass];
-  let policyVp = 0;
   let moneyVp = 0;
-  let resourceVp = 0;
   let loanPenalty = 0;
 
   // 1. Policy Alignment VP
   const alignmentTarget = playerClass === 'working' ? 'A' : playerClass === 'middle' ? 'B' : 'C';
   // State aligns with the highest matching policies to their agenda card in a tie-breaker, but for the table bonus, we use their default class ideology (B).
   const policyAlignmentTarget = playerClass === 'state' ? 'B' : alignmentTarget;
-  policyVp = getPolicyAlignmentVp(policies, policyAlignmentTarget as PolicyLevel);
+  const policyVp = getPolicyAlignmentVp(policies, policyAlignmentTarget as PolicyLevel);
 
   // 2. Money Conversion VP
   if (playerClass !== 'capitalist') {
@@ -333,7 +331,7 @@ export const calculateEndGameVp = (
 
   // Simplified rule: 1 VP for every 15¥ value in resources (approximates 1/2 food + 1/3 others)
   // State's Media Influence is treated as a resource here.
-  resourceVp = Math.floor(totalResourceValue / conversion.resourceRate);
+  const resourceVp = Math.floor(totalResourceValue / conversion.resourceRate);
 
   // 4. Loan Penalty
   if (loanCount > 0) {
