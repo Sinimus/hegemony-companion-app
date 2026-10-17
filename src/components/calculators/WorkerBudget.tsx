@@ -59,6 +59,7 @@ export function WorkerBudget() {
           {!isIncomeTaxRateVerified(policies.labor, policies.tax) && (
             <p className="text-xs text-amber-400/80">Tax rate from the player aid table; not verified against the rules text.</p>
           )}
+          <p className="text-xs text-neutral-500">After an IMF intervention that moved Labor Market, pay by its previous section (p. 33).</p>
           <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
             <span className="text-neutral-200">Wages after tax</span>
             <span className="text-white">{net}</span>

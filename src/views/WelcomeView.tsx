@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { CORE_GLOSSARY, POLICY_GLOSSARY, ACRONYMS, type GlossaryItem } from '@/data/glossary';
-import { BookOpen, Settings, Users, Target, ChevronRight } from 'lucide-react';
+import { BookOpen, Settings, Settings2, RotateCw, Target, ChevronRight } from 'lucide-react';
 
 function InstructionsSection() {
     const instructions = [
@@ -17,10 +17,16 @@ function InstructionsSection() {
             color: 'text-yellow-400'
         },
         {
-            icon: Users,
-            title: 'Select Faction',
-            description: 'Pick the number of players at the top (2: Working and Capitalist Class, 3: plus Middle Class, 4: plus State, p. 8), then your Class in the navigation bar.',
+            icon: Settings2,
+            title: 'Set up the Game',
+            description: 'Set the game on the Setup screen: number of classes, which classes an Automa plays (Simple Mode) and the mini expansions. It lives in the page address, so a bookmark or a shared link keeps it.',
             color: 'text-green-400'
+        },
+        {
+            icon: RotateCw,
+            title: 'Round',
+            description: 'The Round screen is the phase-by-phase reference for your configuration: what happens in each of the five phases, with items from the mini expansions marked.',
+            color: 'text-cyan-400'
         },
         {
             icon: Target,

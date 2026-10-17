@@ -1,12 +1,12 @@
 // The page address carries the game setup and the screen: #<setup>/<screen>
-// (today #2p/#3p/#4p and a screen name). A bookmark or a reload keeps both,
-// and browser Back moves between screens.
-export const SCREENS = ['guide', 'policies', 'endgame', 'working', 'middle', 'capitalist', 'state'] as const;
+// (e.g. #4p+wca+mca+cr/round). A bookmark or a reload keeps both, and browser
+// Back moves between screens.
+export const SCREENS = ['guide', 'setup', 'round', 'policies', 'endgame', 'working', 'middle', 'capitalist', 'state'] as const;
 export type Screen = (typeof SCREENS)[number];
 
 export interface Route {
-  // The raw setup segment; a later sprint adds more tokens to it, so nothing
-  // is validated here beyond "no / and no #" (the split below).
+  // The raw setup segment; segmentToSetup (logic/setup.ts) parses and validates
+  // it, so nothing is checked here beyond "no / and no #" (the split below).
   setup: string;
   screen: Screen;
 }

@@ -3,6 +3,8 @@ import { useGameStore } from '@/stores/useGameStore';
 import { PLAYER_COUNTS, isClassActive } from '@/logic/players';
 import type { Screen } from '@/logic/route';
 import { WelcomeView } from '@/views/WelcomeView';
+import { SetupView } from '@/views/SetupView';
+import { RoundView } from '@/views/RoundView';
 import { DashboardView } from '@/views/DashboardView';
 import { EndGameView } from '@/views/EndGameView';
 import { ScreensNav, ClassTabs } from '@/components/layout/AppNav';
@@ -13,19 +15,14 @@ import { StateView } from '@/views/StateView';
 import { MiddleView } from '@/views/MiddleView';
 import { Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { PlayerClass } from '@/types/game';
-
-const CLASS_SCREENS: readonly Screen[] = ['working', 'middle', 'capitalist', 'state'];
-
-function isPlayerClass(screen: Screen): screen is PlayerClass {
-  return CLASS_SCREENS.includes(screen);
-}
 
 function App() {
   const { playerCount, setPlayerCount, resetGame, screen } = useGameStore();
 
-  // A class that does not play at this player count falls back to the policies screen.
-  const active = isPlayerClass(screen) && !isClassActive(screen, playerCount)
+  // The Middle Class does not play with 2 classes; its screen falls back to the
+  // policies screen. The State is always reachable: with 2 or 3 classes its
+  // screen is the "State without a player" reference.
+  const active = screen === 'middle' && !isClassActive('middle', playerCount)
     ? 'policies'
     : screen;
 
@@ -80,6 +77,8 @@ function App() {
 
       <main ref={mainRef} tabIndex={-1} className="p-4 md:px-8 max-w-4xl mx-auto animate-enter focus:outline-none">
         {active === 'guide' && <WelcomeView />}
+        {active === 'setup' && <SetupView />}
+        {active === 'round' && <RoundView />}
         {active === 'policies' && <DashboardView />}
         {active === 'endgame' && <EndGameView />}
         {active === 'capitalist' && <CapitalistView />}

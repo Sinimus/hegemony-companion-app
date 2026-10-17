@@ -1,5 +1,7 @@
 import type { PlayerClass } from '@/types/game';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useGameStore } from '@/stores/useGameStore';
+import { buildHash } from '@/logic/route';
 import { cn } from '@/lib/utils';
 
 interface FactionReferenceProps {
@@ -18,14 +20,6 @@ interface StrategyGuide {
     vp_source: string;
     key_mechanics: string;
 }
-
-const ROUND_PHASES = [
-    { name: 'Preparation Phase', order: '1. ', description: 'Pay 5 interest per Loan, lower Prosperity (Working Class 1, Middle Class 2), draw back to 7 cards, add new Workers (p. 14, 18, 22).' },
-    { name: 'Action Phase', order: '2. ', description: '5 turns, each a Main Action (a card or a Basic Action) plus one Free Action. Order: WC → MC → CC → State (p. 11).' },
-    { name: 'Production Phase', order: '3. ', description: 'Reverse order State → CC → MC → WC: produce and pay one Wage per Company, Cover Needs with Food, Check IMF, Pay Taxes (p. 11-12).' },
-    { name: 'Elections Phase', order: '4. ', description: 'Refill the bag and vote on proposed Bills; a passed Bill scores 3 VP for its proposer and 1 VP for each supporter whose vote counted (p. 12, 32).' },
-    { name: 'Scoring Phase', order: '5. ', description: 'Score Trade Unions, Wealth, the Middle Class Prosperity check, the State\'s Legitimacy and Political Agenda; Legitimacy then drops to half (p. 17, 21, 25, 28-29).' },
-];
 
 const FACTION_GUIDES: Record<PlayerClass, ActionGuide[]> = {
     'working': [
@@ -71,31 +65,14 @@ const CLASS_BORDER: Record<PlayerClass, string> = {
 
 
 export function FactionReference({ playerClass }: FactionReferenceProps) {
+    const { setupSegment } = useGameStore();
     const strategy = CLASS_STRATEGIES[playerClass];
     const guide = FACTION_GUIDES[playerClass];
 
     // Determine color based on class for dynamic styling
     const FactionColor = CLASS_BORDER[playerClass];
 
-    // --- BOX 1: General Round Flow ---
-    const BoxRoundFlow = (
-        <Card className={cn("h-full border-neutral-700/50", FactionColor)}>
-            <CardHeader className={cn("p-4 border-b", FactionColor)}>
-                <CardTitle className="text-lg">General Round Flow (5 Phases)</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 pt-4">
-                {ROUND_PHASES.map((p) => (
-                    <div key={p.order} className="border-l-4 border-neutral-800/50 pl-3">
-                        <p className="font-bold text-neutral-200">{p.order}{p.name}</p>
-                        <p className="text-sm text-neutral-400">{p.description}</p>
-                    </div>
-                ))}
-                <p className="text-xs italic text-neutral-500 pt-2">Turns with Main and Free Actions happen in the Action Phase (WC → MC → CC → State); every player also pays, buys Food and votes in the Production and Elections Phases (p. 11-12).</p>
-            </CardContent>
-        </Card>
-    );
-
-    // --- BOX 2: Faction Turn Flow (Linked to Calculators) ---
+    // --- BOX 1: Faction Turn Flow (Linked to Calculators) ---
     const BoxTurnFlow = (
         <Card className={cn("h-full border-neutral-700/50", FactionColor)}>
             <CardHeader className={cn("p-4 border-b", FactionColor)}>
@@ -141,10 +118,21 @@ export function FactionReference({ playerClass }: FactionReferenceProps) {
     );
 
     return (
-        <div className="grid md:grid-cols-3 gap-6 pt-6">
-            {BoxRoundFlow}
-            {BoxTurnFlow}
-            {BoxStrategy}
+        <div className="pt-6 space-y-4">
+            <p className="text-sm text-neutral-400">
+                Round flow: see the{' '}
+                <a
+                    href={buildHash({ setup: setupSegment, screen: 'round' })}
+                    className="text-blue-400 underline hover:text-blue-300"
+                >
+                    Round screen
+                </a>
+                .
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+                {BoxTurnFlow}
+                {BoxStrategy}
+            </div>
         </div>
     );
 }
