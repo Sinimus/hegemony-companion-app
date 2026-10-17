@@ -1,0 +1,63 @@
+name: PR checks
+
+# Runs on pull requests only. The deploy pipeline (docker-build.yml: push to
+# main -> GHCR -> Coolify) is separate and unchanged.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # pnpm version comes from "packageManager" in package.json
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Type check
+        run: pnpm exec tsc -b
+      - name: Test
+        run: pnpm test
+      - name: Build
+        run: pnpm build
+
+  # Builds the production image without pushing it, so a broken Dockerfile
+  # fails here instead of in the deploy after the merge
+  docker-build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: hegemony-companion:ci
+
+      - name: Smoke test the image
+        run: |
+          docker run --detach --name smoke --publish 8080:80 hegemony-companion:ci
+          for i in $(seq 1 30); do
+            if curl --silent --fail --output page.html http://localhost:8080/; then
+              echo "Container answered on attempt ${i}"
+              grep --quiet '<title>Hegemony Companion</title>' page.html
+              docker rm --force smoke
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs smoke
+          exit 1
