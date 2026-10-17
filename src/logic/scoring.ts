@@ -224,41 +224,6 @@ export const calculateWelfareBenefits = (
     return { vpGain: 0, legitimacyGain: 0 };
 };
 
-// --- NEW AUTOMA ASSISTANT LOGIC (Simplified Priority Check) ---
-
-/**
- * Simulates a simplified priority check for a Capitalist Automa/Bot.
- * This should eliminate the need to manually check the Automa flowchart for common scenarios.
- * Note: This is an illustrative simplification of Automa complexity.
- * @param currentCapital Current Capital value (used for Lobby check).
- * @param currentTaxMultiplier Current Tax Multiplier value (P3/P4/P5).
- */
-export const getCapitalistAutomaPriority = (
-    currentCapital: number,
-    currentTaxMultiplier: number
-): { action: string; tool: string } => {
-
-    // Priority 1: Pay off loans (always critical)
-    // We assume the user tracks loans manually, but the Automa priority check is vital.
-    if (currentCapital >= 50 && currentTaxMultiplier > 7) {
-        return { action: 'Pay Off Loan (50¥)', tool: 'LoanCostCalc' };
-    }
-
-    // Priority 2: Maintain Influence (Lobby check)
-    // Assume influence below 5 is risky. Lobby costs 30¥ for 3 Influence.
-    if (currentCapital >= 30 && currentTaxMultiplier < 5) {
-        return { action: 'Lobby for Influence (30¥)', tool: 'WealthCalc' };
-    }
-
-    // Priority 3: Build/Optimize Companies (Core action)
-    if (currentTaxMultiplier > 5) {
-        return { action: 'Build / Automate Company', tool: 'ProductionCalc' };
-    }
-
-    // Priority 4: Score VP (Generic)
-    return { action: 'Secure Market / Adjust Prices', tool: 'TradeCalc' };
-};
-
 /**
  * Calculates VP from Policy Alignment (Policies P1-P5).
  * @param policies The full current policy state.

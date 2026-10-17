@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
-import { calculateTradeUnionVp, calculateWelfareBenefits, getCapitalistAutomaPriority } from '@/logic/scoring';
-import { calculateTaxMultiplier } from '@/logic/economics';
+import { calculateTradeUnionVp, calculateWelfareBenefits } from '@/logic/scoring';
 import { Card } from '@/components/ui/card';
-import { Users, Scale, Factory } from 'lucide-react';
+import { Users, Scale } from 'lucide-react';
 
 // --- Trade Union VP (WC) ---
 
@@ -64,39 +63,6 @@ export function WelfareBenefitCalc() {
             <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
                 <span className="text-neutral-200">Total Bonus (VP/Leg)</span>
                 <span className="text-class-state">+{totalVp} VP / +{totalLeg} Leg</span>
-            </div>
-        </Card>
-    );
-}
-
-// --- Automa Decision Assistant (CC) ---
-
-export function AutomaDecisionAssistant() {
-    const { policies } = useGameStore();
-    const [ccCapital, setCcCapital] = useState(120);
-
-    const taxMultiplier = calculateTaxMultiplier(policies.tax, policies.health, policies.education);
-    const priority = getCapitalistAutomaPriority(ccCapital, taxMultiplier);
-
-    return (
-        <Card className="p-4 space-y-3 border-neutral-800/50">
-            <h4 className="text-sm font-bold text-red-500 flex items-center gap-2">
-                <Factory className="w-4 h-4" /> Automa Decision Assistant (CC)
-            </h4>
-            <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                    <label className="text-sm text-neutral-400">Capitalist Capital (¥)</label>
-                    <input type="number" min="0" value={ccCapital} onChange={e => setCcCapital(Number(e.target.value))} className="w-16 bg-neutral-950 border border-neutral-700 rounded p-1 text-right text-white" />
-                </div>
-                <div className="flex justify-between text-sm">
-                    <span className="text-neutral-400">Current Tax Multiplier (TM)</span>
-                    <span className="text-yellow-400 font-mono">{taxMultiplier}</span>
-                </div>
-            </div>
-            <div className="flex flex-col pt-2 border-t border-neutral-800">
-                <span className="text-xs uppercase text-neutral-500 mb-1">CC Automa Next Priority</span>
-                <span className="text-lg font-black text-white">{priority.action}</span>
-                <span className="text-xs font-mono text-yellow-500 mt-1">Tool: {priority.tool}</span>
             </div>
         </Card>
     );

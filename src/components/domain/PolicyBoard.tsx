@@ -1,4 +1,4 @@
-import { useGameStore } from '@/stores/useGameStore';
+import { useGameStore, UNVERIFIED_START_POLICIES } from '@/stores/useGameStore';
 import { POLICIES } from '@/data/policies';
 import { PolicyRow } from './PolicyRow';
 
@@ -16,6 +16,7 @@ export function PolicyBoard() {
           policy={policy}
           currentLevel={policies[policy.id]}
           onChange={(level) => setPolicy(policy.id, level)}
+          startUnverified={UNVERIFIED_START_POLICIES.includes(policy.id)}
         />
       ))}
     </div>

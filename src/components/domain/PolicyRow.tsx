@@ -6,9 +6,10 @@ interface PolicyRowProps {
   policy: PolicyDef;
   currentLevel: PolicyLevel;
   onChange: (level: PolicyLevel) => void;
+  startUnverified?: boolean;
 }
 
-export function PolicyRow({ policy, currentLevel, onChange }: PolicyRowProps) {
+export function PolicyRow({ policy, currentLevel, onChange, startUnverified }: PolicyRowProps) {
   const levels: PolicyLevel[] = ['A', 'B', 'C'];
 
   const getLevelColor = (level: PolicyLevel) => {
@@ -45,6 +46,9 @@ export function PolicyRow({ policy, currentLevel, onChange }: PolicyRowProps) {
       <div className="text-xs text-neutral-400 mt-2 pl-1 italic">
         Current effect: {policy.levels[currentLevel].effect}
       </div>
+      {startUnverified && (
+        <div className="text-xs text-amber-400/80 pl-1">Start position not verified against the rules text.</div>
+      )}
     </div>
   );
 }

@@ -1,16 +1,14 @@
 import { PolicyBoard } from '@/components/domain/PolicyBoard';
 import { useGameStore } from '@/stores/useGameStore';
 import { calculateTaxMultiplier, getMinimumWage, calculateEmploymentTax } from '@/logic/economics';
-import { calculateStateBalance } from '@/logic/taxes';
 import { calculateWorkerIncomeTax } from '@/logic/scoring';
-import { Users, Briefcase, Landmark, Zap } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Users, Briefcase, Zap } from 'lucide-react';
 import type { PolicyLevel, PolicyType } from '@/types/game';
 import { LoanCostCalc } from '@/components/calculators/LoanCostCalc'; // NEW IMPORT
 
 // Defaultní hodnoty pro simulaci na Dashboardu
 const DEFAULT_WORKERS = 3;
-const DEFAULT_COMPANIES = 2; // Počet firem pro State balance a CC
+const DEFAULT_COMPANIES = 2; // Počet firem pro CC
 
 // --- Helper funkce pro WC/CC/State status ---
 
@@ -36,8 +34,6 @@ export function DashboardView() {
 
   const wcStatus = getWcStatus(policies);
   const ccStatus = getCcStatus(policies);
-  // Zjednodušená simulace State balance (používá defaults z logic/taxes.ts)
-  const stateStatus = calculateStateBalance(DEFAULT_COMPANIES, DEFAULT_COMPANIES, policies.fiscal as PolicyLevel, policies.tax as PolicyLevel);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -47,7 +43,7 @@ export function DashboardView() {
       </header>
 
       {/* Rychlý Přehled Dopadu */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         {/* Tax Multiplier */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4 col-span-2 md:col-span-1">
           <div className="flex items-center gap-2 mb-2">
@@ -58,20 +54,6 @@ export function DashboardView() {
             <span className="text-3xl font-extrabold text-yellow-300">{ccStatus.tm}</span>
             <p className="text-xs text-neutral-500">
               (TM: P3, P4, P5 effects)
-            </p>
-          </div>
-        </div>
-
-        {/* State Fiscal Balance */}
-        <div className={cn("bg-neutral-900 border rounded-lg p-4 col-span-2 md:col-span-1", stateStatus.balance < 0 ? 'border-red-500/50' : 'border-blue-500/50')}>
-          <div className="flex items-center gap-2 mb-2">
-            <Landmark className={cn("w-5 h-5", stateStatus.balance < 0 ? 'text-red-500' : 'text-blue-500')} />
-            <h3 className="text-sm uppercase text-neutral-400 font-bold">Fiscal Balance (Est.)</h3>
-          </div>
-          <div className="space-y-1">
-            <span className="text-2xl font-extrabold">{stateStatus.balance} ¥</span>
-            <p className="text-xs text-neutral-500">
-              Exp: {stateStatus.expenses}¥, Rev: {stateStatus.revenue}¥
             </p>
           </div>
         </div>

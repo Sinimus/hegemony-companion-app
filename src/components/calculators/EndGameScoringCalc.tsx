@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
 import { calculateEndGameVp } from '@/logic/scoring';
+import { getActiveClasses } from '@/logic/players';
 import { END_GAME_VP_CONVERSION } from '@/logic/scoringData';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Trophy, Coins, AlertTriangle } from 'lucide-react';
@@ -106,6 +107,8 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
 }
 
 export function EndGameScoringCalc() {
+    const { playerCount } = useGameStore();
+
     return (
         <div className="space-y-6">
             <Card className="bg-neutral-900/50 border-blue-400/50">
@@ -120,10 +123,9 @@ export function EndGameScoringCalc() {
                         The game ends after the <span className="font-bold text-white">Scoring Phase of Round 5</span>. Use this tool to simulate final VP gains and potential penalties based on policy alignment and remaining resources/loans.
                     </p>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-                        <ClassInputGroup playerClass="working" />
-                        <ClassInputGroup playerClass="middle" />
-                        <ClassInputGroup playerClass="capitalist" />
-                        <ClassInputGroup playerClass="state" />
+                        {getActiveClasses(playerCount).map((playerClass) => (
+                            <ClassInputGroup key={playerClass} playerClass={playerClass} />
+                        ))}
                     </div>
                 </CardContent>
             </Card>

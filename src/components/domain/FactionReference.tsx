@@ -37,7 +37,7 @@ const FACTION_GUIDES: Record<PlayerClass, ActionGuide[]> = {
     'middle': [
         { actionName: 'Build Company', actionType: 'Basic', description: 'Pay cost and place own workers (committed) to run small business (max 8 companies).', calculatorLink: 'MiddleBalance' },
         { actionName: 'Extra Shift', actionType: 'Basic', description: 'Produce instantly using uncommitted MC workers (pay WC wage if applicable).', calculatorLink: 'MiddleBalance' },
-        { actionName: 'Sell to Foreign Market', actionType: 'Basic', description: 'Sell produced goods/services (1x per transaction) for revenue and 1 VP per trade.', calculatorLink: 'TradeCalc' },
+        { actionName: 'Sell to Foreign Market', actionType: 'Basic', description: 'Sell produced goods/services (1x per transaction) for revenue and 1 VP per trade.' },
         { actionName: 'Scoring Check', actionType: 'N/A', description: 'During Scoring, check if Prosperity < Operational Companies for free +1 Prosperity.', calculatorLink: 'MiddleProsperityCalc' },
     ],
     'capitalist': [
@@ -49,7 +49,7 @@ const FACTION_GUIDES: Record<PlayerClass, ActionGuide[]> = {
     'state': [
         { actionName: 'Event Action', actionType: 'Basic', description: 'Resolve an Event card, choose a class to support, gaining Legitimacy/VP/resources.', calculatorLink: 'StateScoringCalc' },
         { actionName: 'Propose Bill', actionType: 'Basic', description: 'Propose a policy change (+/- 1 step). Spend 1 Influence for an Immediate Vote to gain 3 VP.', calculatorLink: 'PolicyBoard' },
-        { actionName: 'Extra Tax', actionType: 'Basic', description: 'Gain 10¥ from all players (Risk: -1 Legitimacy to 2 lowest classes).', calculatorLink: 'StateTreasury' },
+        { actionName: 'Extra Tax', actionType: 'Basic', description: 'Gain 10¥ from all players (Risk: -1 Legitimacy to 2 lowest classes).' },
         { actionName: 'Legitimacy Scoring', actionType: 'N/A', description: 'Gain VP equal to the sum of the two lowest Legitimacy scores.', calculatorLink: 'StateScoringCalc' },
     ],
 };

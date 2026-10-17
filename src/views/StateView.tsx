@@ -1,4 +1,3 @@
-import { StateTreasury } from '@/components/calculators/StateTreasury';
 import { StateScoringCalc } from '@/components/calculators/StateScoringCalc';
 import { FactionReference } from '@/components/domain/FactionReference';
 import { WelfareBenefitCalc } from '@/components/calculators/MicroUtilityCalc';
@@ -12,10 +11,7 @@ export function StateView() {
         <p className="text-neutral-400">Legitimacy & Fiscal Responsibility</p>
       </header>
       <div className="grid gap-6 md:grid-cols-2">
-        <StateTreasury />
         <StateScoringCalc />
-      </div>
-      <div className="grid gap-6 md:grid-cols-2"> {/* NEW ROW FOR WELFARE CALC */}
         <WelfareBenefitCalc />
         <IMFRiskCalc />
       </div>
