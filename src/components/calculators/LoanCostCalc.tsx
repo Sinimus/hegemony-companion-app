@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { calculateLoanCosts } from '@/logic/economics';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Banknote, AlertTriangle } from 'lucide-react';
+import { formatDeduction } from '@/lib/format';
 
 export function LoanCostCalc() {
     const [loanCount, setLoanCount] = useState(1);
@@ -33,11 +34,11 @@ export function LoanCostCalc() {
                     <div className="space-y-2 pt-4 border-t border-neutral-800">
                         <div className="flex justify-between text-sm">
                             <span className="text-neutral-400">Preparation Phase Interest (Mandatory)</span>
-                            <span className="text-red-400 font-mono">-{costs.interestCost} ¥</span>
+                            <span className="text-red-400 font-mono">{formatDeduction(costs.interestCost)} ¥</span>
                         </div>
                         <div className="flex justify-between text-sm">
                             <span className="text-neutral-400">Pay off (Free Action, 50 per Loan)</span>
-                            <span className="text-red-400 font-mono">-{costs.payoffCost} ¥</span>
+                            <span className="text-red-400 font-mono">{formatDeduction(costs.payoffCost)} ¥</span>
                         </div>
 
                         <h4 className="text-xs uppercase text-red-500 font-bold pt-4 flex items-center gap-2">
@@ -45,11 +46,11 @@ export function LoanCostCalc() {
                         </h4>
                         <div className="flex justify-between text-sm">
                             <span className="text-neutral-400">Capitalist Class at game end (-5 VP per Loan)</span>
-                            <span className="text-red-500 font-mono">-{costs.maxCcPenalty} VP</span>
+                            <span className="text-red-500 font-mono">{formatDeduction(costs.maxCcPenalty)} VP</span>
                         </div>
                         <div className="flex justify-between text-sm">
                             <span className="text-neutral-400">Other classes at game end (up to -11 VP per Loan if nothing is paid)</span>
-                            <span className="text-red-500 font-mono">-{costs.maxWcMcPenalty} VP</span>
+                            <span className="text-red-500 font-mono">{formatDeduction(costs.maxWcMcPenalty)} VP</span>
                         </div>
 
                         <p className="text-xs text-neutral-500 pt-2 italic">

@@ -6,12 +6,12 @@ import type { PolicyDef } from '@/data/policies';
 import { calculateStateLegitimacyVp, calculateStateAgendaVp, dropLegitimacy } from '@/logic/scoring';
 import { Users, Briefcase, Home } from 'lucide-react';
 
-// Konstanty pro simulaci Politické agendy
+// Constants for the Political Agenda simulation
 const DEFAULT_AGENDA: Record<PolicyType, PolicyLevel> = {
   fiscal: 'A', labor: 'B', tax: 'A', health: 'B', education: 'C', trade: 'A', immigration: 'B',
 };
 
-// Pomocná komponenta pro selektor Policy Level (pro Agenda UI)
+// Helper component for selecting a Policy Level (Agenda UI)
 const PolicyLevelSelector = ({
   policy,
   currentLevel,
@@ -46,24 +46,24 @@ const PolicyLevelSelector = ({
 export function StateScoringCalc() {
   const { policies } = useGameStore();
 
-  // Stav pro simulaci aktuálních hodnot Legitimacy
+  // State for simulating the current Legitimacy values
   const [wcLeg, setWcLeg] = useState(2);
   const [mcLeg, setMcLeg] = useState(2);
   const [ccLeg, setCcLeg] = useState(2);
-  // Stav pro simulaci Politické Agendy
+  // State for simulating the Political Agenda
   const [agenda, setAgenda] = useState(DEFAULT_AGENDA);
 
-  // VP Kalkulace
+  // VP calculation
   const legitimacyVp = calculateStateLegitimacyVp(wcLeg, mcLeg, ccLeg);
   const agendaVp = calculateStateAgendaVp(policies, agenda);
   const totalVp = legitimacyVp + agendaVp;
 
-  // Simulace snížení Legitimacy pro příští kolo
+  // Simulate the Legitimacy drop for the next round
   const nextWcLeg = dropLegitimacy(wcLeg);
   const nextMcLeg = dropLegitimacy(mcLeg);
   const nextCcLeg = dropLegitimacy(ccLeg);
 
-  // Funkce pro aktualizaci agendy
+  // Update one agenda policy
   const setAgendaPolicy = (type: PolicyType, level: PolicyLevel) => {
     setAgenda(prev => ({ ...prev, [type]: level }));
   };
@@ -74,7 +74,7 @@ export function StateScoringCalc() {
         👑 VP Scoring Phase
       </h3>
 
-      {/* Část 1: Legitimacy Scoring */}
+      {/* Part 1: Legitimacy Scoring */}
       <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
         <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">1. Legitimacy Check & Drop</h4>
 
@@ -123,11 +123,11 @@ export function StateScoringCalc() {
         </div>
       </div>
 
-      {/* Část 2: Political Agenda Scoring */}
+      {/* Part 2: Political Agenda Scoring */}
       <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
         <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">2. Political Agenda Match ({agendaVp} / 7 VP)</h4>
 
-        {/* Simulátor Policy Agendy (všechny politiky) */}
+        {/* Policy Agenda simulator (all policies) */}
         <div className="mb-2">
           {POLICIES.map(p => (
             <PolicyLevelSelector
@@ -148,7 +148,7 @@ export function StateScoringCalc() {
         </div>
       </div>
 
-      {/* Celkový součet VP */}
+      {/* Total VP sum */}
       <div className="flex justify-between text-xl font-black pt-2 border-t border-neutral-800">
         <span className="text-neutral-200">Total VP from Scoring Phase</span>
         <span className="text-indigo-400">+{totalVp}</span>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
 import { calculateImportCost, BASE_IMPORT_PRICES } from '@/logic/trade';
 import { Truck } from 'lucide-react';
+import { formatDeduction } from '@/lib/format';
 
 export function ImportTariffCalc() {
   const { policies } = useGameStore();
@@ -47,15 +48,15 @@ export function ImportTariffCalc() {
       <div className="space-y-2 pt-4 border-t border-neutral-800">
         <div className="flex justify-between text-sm">
           <span className="text-neutral-400">Base Cost (To Supply)</span>
-          <span className="text-red-400 font-mono">-{baseCost}¥</span>
+          <span className="text-red-400 font-mono">{formatDeduction(baseCost)}¥</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-400">Tariff Cost (To State - P6: {policies.trade})</span>
-          <span className="text-red-400 font-mono">-{tariffCost}¥</span>
+          <span className="text-red-400 font-mono">{formatDeduction(tariffCost)}¥</span>
         </div>
         <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
           <span className="text-neutral-200">Total Cost to Player</span>
-          <span className="text-red-500 font-mono">-{totalCost}¥</span>
+          <span className="text-red-500 font-mono">{formatDeduction(totalCost)}¥</span>
         </div>
         <p className="text-xs text-neutral-500 pt-2">
           *Tariff rate based on Policy 6 (Foreign Trade) is {tariffRate}¥/unit.

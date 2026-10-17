@@ -63,7 +63,7 @@ function App() {
           </div>
       </header>
 
-      <main className="p-4 md:px-8 max-w-4xl mx-auto animate-in fade-in duration-500">
+      <main className="p-4 md:px-8 max-w-4xl mx-auto animate-enter">
         {view === 'welcome' && <WelcomeView />}
         {view === 'dashboard' && <DashboardView />}
         {view === 'endgame' && <EndGameView />}

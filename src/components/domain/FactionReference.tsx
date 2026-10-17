@@ -62,12 +62,20 @@ const CLASS_STRATEGIES: Record<PlayerClass, StrategyGuide> = {
 };
 
 
+const CLASS_BORDER: Record<PlayerClass, string> = {
+    'working': 'border-class-working',
+    'middle': 'border-class-middle',
+    'capitalist': 'border-class-capitalist',
+    'state': 'border-class-state',
+};
+
+
 export function FactionReference({ playerClass }: FactionReferenceProps) {
     const strategy = CLASS_STRATEGIES[playerClass];
     const guide = FACTION_GUIDES[playerClass];
 
     // Determine color based on class for dynamic styling
-    const FactionColor = `border-class-${playerClass}`;
+    const FactionColor = CLASS_BORDER[playerClass];
 
     // --- BOX 1: General Round Flow ---
     const BoxRoundFlow = (

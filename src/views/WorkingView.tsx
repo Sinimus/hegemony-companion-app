@@ -5,7 +5,7 @@ import { TradeUnionVpCalc } from '@/components/calculators/MicroUtilityCalc'; //
 
 export function WorkingView() {
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-enter">
       <header>
         <h2 className="text-3xl font-black text-class-working mb-1">Working Class</h2>
         <p className="text-neutral-400">Solidarity & Prosperity</p>

@@ -14,11 +14,11 @@ export function MiddleProsperityCalc() {
   const [action, setAction] = useState<ProsperityAction>('education');
   const [operationalCompanies, setOperationalCompanies] = useState(2); // MC starts with 2
 
-  // A. Simulace akce (Use Action)
+  // A. Simulate the Use H/E/L action
   const { gainedVp: actionVp, newLevel } = calculateMiddleClassProsperityVp(currentLevel, action);
   const isMaxAction = currentLevel >= PROSPERITY_LEVELS.length - 1;
 
-  // B. Simulace Scoring Phase Check
+  // B. Simulate the Scoring Phase check
   const canGainBonus = canMiddleClassGainProsperity(currentLevel, operationalCompanies);
   const bonusVpScoring = canGainBonus ? getVpForNewProsperity(currentLevel + 1) : 0;
 
@@ -31,7 +31,7 @@ export function MiddleProsperityCalc() {
       </h3>
 
       <div className="space-y-4">
-        {/* Část 1: Akce v Action Phase */}
+        {/* Part 1: Action in the Action Phase */}
         <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
           <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">1. Action Phase: Use Action</h4>
           <div className="flex justify-between items-center mb-2">
@@ -65,7 +65,7 @@ export function MiddleProsperityCalc() {
           </div>
         </div>
 
-        {/* Část 2: Kontrola v Scoring Phase */}
+        {/* Part 2: Check in the Scoring Phase */}
         <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
           <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">2. Scoring Phase: Prosperity Check</h4>
           <div className="flex justify-between items-center mb-2">

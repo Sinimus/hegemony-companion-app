@@ -24,6 +24,14 @@ const START_MONEY: Record<PlayerClass, number> = {
     state: 120,
 };
 
+// Static class-name lookup: Tailwind never generates classes built from variables
+const CLASS_TITLE: Record<PlayerClass, string> = {
+    working: 'text-class-working',
+    middle: 'text-class-middle',
+    capitalist: 'text-class-capitalist',
+    state: 'text-class-state',
+};
+
 // Helper component for class-specific inputs
 const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
     const { policies } = useGameStore();
@@ -45,7 +53,7 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
 
     return (
         <Card className="p-4 space-y-3 border-neutral-700/50">
-            <h4 className={`text-lg font-bold uppercase text-class-${playerClass}`}>
+            <h4 className={`text-lg font-bold uppercase ${CLASS_TITLE[playerClass]}`}>
                 {playerClass} Class
             </h4>
 

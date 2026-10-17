@@ -69,11 +69,17 @@ function InstructionsSection() {
     );
 }
 
-function GlossaryCategory({ title, items, color }: { title: string; items: GlossaryItem[]; color: string }) {
+const GLOSSARY_STYLES: Record<'green' | 'purple', { card: string; header: string; title: string }> = {
+    green: { card: 'border-green-500/50 bg-neutral-900/50', header: 'border-b border-green-500/30', title: 'text-lg text-green-400' },
+    purple: { card: 'border-purple-500/50 bg-neutral-900/50', header: 'border-b border-purple-500/30', title: 'text-lg text-purple-400' },
+};
+
+function GlossaryCategory({ title, items, color }: { title: string; items: GlossaryItem[]; color: 'green' | 'purple' }) {
+    const styles = GLOSSARY_STYLES[color];
     return (
-        <Card className={`border-${color}/50 bg-neutral-900/50`}>
-            <CardHeader className={`border-b border-${color}/30`}>
-                <CardTitle className={`text-lg text-${color}`}>{title}</CardTitle>
+        <Card className={styles.card}>
+            <CardHeader className={styles.header}>
+                <CardTitle className={styles.title}>{title}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
                 {items.map((item, index) => (
@@ -142,7 +148,7 @@ function GlossarySection() {
 
 export function WelcomeView() {
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="space-y-8 animate-enter">
             <header className="text-center space-y-4">
                 <h1 className="text-4xl font-black text-white tracking-tighter">
                     Welcome to HEGEMONY

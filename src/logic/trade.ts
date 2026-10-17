@@ -1,21 +1,21 @@
 import type { PolicyLevel } from '@/types/game';
 
 export const BASE_IMPORT_PRICES: Record<string, number> = {
-  food: 4, // Základní cena prodejci
+  food: 4, // Base price paid to the Supply
   luxury: 6,
 };
 
 export const TARIFF_RATES: Record<PolicyLevel, Record<string, number>> = {
-  A: { food: 10, luxury: 6 }, // Protectionism: Vysoké tarify
-  B: { food: 5, luxury: 3 },  // Balanced: Střední tarify
-  C: { food: 0, luxury: 0 },  // Free Trade: Nulové tarify
+  A: { food: 10, luxury: 6 }, // Protectionism: high tariffs
+  B: { food: 5, luxury: 3 },  // Balanced: medium tariffs
+  C: { food: 0, luxury: 0 },  // Free Trade: no tariffs
 };
 
 /**
- * Vypočítá celkové náklady na import (základní cena + tarify).
- * @param goods Množství importovaného zboží.
- * @param type Typ zboží ('food' nebo 'luxury').
- * @param tradePolicy Aktuální Foreign Trade Policy (P6).
+ * Calculates the total import cost (base price + tariffs).
+ * @param goods Quantity of imported goods.
+ * @param type Type of goods ('food' or 'luxury').
+ * @param tradePolicy Current Foreign Trade Policy (P6).
  */
 export const calculateImportCost = (
   goods: number,
@@ -29,8 +29,8 @@ export const calculateImportCost = (
   const basePrice = BASE_IMPORT_PRICES[type];
   const tariffRate = TARIFF_RATES[tradePolicy][type];
 
-  const baseCost = goods * basePrice;       // Placeno do Supply
-  const tariffCost = goods * tariffRate;     // Placeno Státu
+  const baseCost = goods * basePrice;       // Paid to the Supply
+  const tariffCost = goods * tariffRate;     // Paid to the State
   const totalCost = baseCost + tariffCost;
 
   return {

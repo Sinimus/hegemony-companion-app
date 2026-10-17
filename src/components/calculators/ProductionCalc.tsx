@@ -5,6 +5,7 @@ import {
   calculateTaxMultiplier,
   getAllowedWageLevels,
 } from '@/logic/economics';
+import { formatDeduction } from '@/lib/format';
 
 export function ProductionCalc() {
   const { policies } = useGameStore();
@@ -72,15 +73,15 @@ export function ProductionCalc() {
         <div className="space-y-2 pt-4 border-t border-neutral-800">
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Wages</span>
-            <span className="text-red-400 font-mono">-{wages}</span>
+            <span className="text-red-400 font-mono">{formatDeduction(wages)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Employment Tax (TM {taxMultiplier} x {companies})</span>
-            <span className="text-red-400 font-mono">-{result.employmentTax}</span>
+            <span className="text-red-400 font-mono">{formatDeduction(result.employmentTax)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-neutral-400">Corporate Tax (P3 {policies.tax})</span>
-            <span className="text-red-400 font-mono">-{result.corporateTax}</span>
+            <span className="text-red-400 font-mono">{formatDeduction(result.corporateTax)}</span>
           </div>
           <p className="text-xs text-amber-400/80">Corporate Tax table not verified except Revenue 81 at P3 A (p. 20).</p>
           <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">

@@ -2,7 +2,7 @@ import { EndGameScoringCalc } from '@/components/calculators/EndGameScoringCalc'
 
 export function EndGameView() {
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-6 animate-enter">
       <header>
         <h2 className="text-3xl font-black text-white mb-1">End Game Scoring</h2>
         <p className="text-neutral-400">Final Victory Point Calculator</p>
