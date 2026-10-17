@@ -31,7 +31,7 @@ const FACTION_GUIDES: Record<PlayerClass, ActionGuide[]> = {
     'working': [
         { actionName: 'Assign Workers', actionType: 'Basic', description: 'Place up to 3 uncommitted workers on company slots or Trade Unions to secure income.', calculatorLink: 'WorkerBudget' },
         { actionName: 'Use H/E/L', actionType: 'Free', description: 'Spend Health, Education or Luxury equal to your Population for +1 Prosperity. Healthcare also gives 2 VP and a new Worker; Education trains a Worker (p. 16).', calculatorLink: 'WorkingProsperityCalc' },
-        { actionName: 'Strike', actionType: 'Basic', description: 'Place tokens on L1/L2 wage companies to pressure owners for raises, gaining Influence if production is blocked.', calculatorLink: 'WorkerBudget' },
+        { actionName: 'Strike', actionType: 'Basic', description: 'Strike in up to 2 Companies with L1 or L2 Wages and no committed Workers; each that still pays L1 or L2 at production skips it and gives you 1 Influence. Public Companies only with 4 players (p. 15-16).', calculatorLink: 'WorkerBudget' },
         { actionName: 'Buy Goods & Services', actionType: 'Basic', description: 'Buy Food/Luxury/H/E/Influence (up to Pop limit) from 2 sources. Check P6 tariffs for Foreign Market.', calculatorLink: 'ImportTariffCalc' },
     ],
     'middle': [
