@@ -1,39 +1,25 @@
 import { PolicyBoard } from '@/components/domain/PolicyBoard';
 import { useGameStore } from '@/stores/useGameStore';
-import { calculateTaxMultiplier, getMinimumWage, calculateEmploymentTax } from '@/logic/economics';
-import { calculateWorkerIncomeTax } from '@/logic/scoring';
-import { Users, Briefcase, Zap } from 'lucide-react';
-import type { PolicyLevel, PolicyType } from '@/types/game';
-import { LoanCostCalc } from '@/components/calculators/LoanCostCalc'; // NEW IMPORT
-
-// Defaultní hodnoty pro simulaci na Dashboardu
-const DEFAULT_WORKERS = 3;
-const DEFAULT_COMPANIES = 2; // Počet firem pro CC
-
-// --- Helper funkce pro WC/CC/State status ---
-
-function getWcStatus(policies: Record<PolicyType, PolicyLevel>) {
-  const wage = getMinimumWage(policies.labor as PolicyLevel);
-  const tax = calculateWorkerIncomeTax(DEFAULT_WORKERS, policies.labor as PolicyLevel, policies.tax as PolicyLevel);
-  const net = (wage * DEFAULT_WORKERS) - tax;
-
-  return { wage, tax, net };
-}
-
-function getCcStatus(policies: Record<PolicyType, PolicyLevel>) {
-  const tm = calculateTaxMultiplier(policies.tax as PolicyLevel, policies.health as PolicyLevel, policies.education as PolicyLevel);
-  const employmentTax = calculateEmploymentTax(DEFAULT_COMPANIES, policies.tax as PolicyLevel, policies.health as PolicyLevel, policies.education as PolicyLevel);
-
-  return { tm, employmentTax };
-}
+import {
+  calculateTaxMultiplier,
+  getAllowedWageLevels,
+  getIncomeTaxRate,
+  IMMIGRATION_EXTRA_WORKERS,
+  PUBLIC_SERVICE_PRICE,
+} from '@/logic/economics';
+import { isIncomeTaxRateVerified } from '@/logic/taxData';
+import { TARIFF_RATES } from '@/logic/trade';
+import { Zap, Users, Coins, Heart, Truck, UserPlus } from 'lucide-react';
+import { LoanCostCalc } from '@/components/calculators/LoanCostCalc';
 
 // --- Dashboard Component ---
 
 export function DashboardView() {
   const { policies } = useGameStore();
 
-  const wcStatus = getWcStatus(policies);
-  const ccStatus = getCcStatus(policies);
+  const taxMultiplier = calculateTaxMultiplier(policies.tax, policies.health, policies.education);
+  const incomeTaxRate = getIncomeTaxRate(policies.labor, policies.tax);
+  const allowedWageLevels = getAllowedWageLevels(policies.labor).join(', ');
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -42,57 +28,105 @@ export function DashboardView() {
         <p className="text-neutral-400">Real-time economic synthesis based on current global policies.</p>
       </header>
 
-      {/* Rychlý Přehled Dopadu */}
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* Policy effects at a glance */}
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
         {/* Tax Multiplier */}
-        <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4 col-span-2 md:col-span-1">
+        <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="w-5 h-5 text-yellow-500" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">Tax Multiplier</h3>
           </div>
           <div className="space-y-1">
-            <span className="text-3xl font-extrabold text-yellow-300">{ccStatus.tm}</span>
+            <span className="text-3xl font-extrabold text-yellow-300">{taxMultiplier}</span>
             <p className="text-xs text-neutral-500">
               (TM: P3, P4, P5 effects)
             </p>
           </div>
         </div>
 
-        {/* WC Status */}
+        {/* Minimum Wage */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <Users className="w-5 h-5 text-green-400" />
-            <h3 className="text-sm uppercase text-neutral-400 font-bold">WC Net Income (x{DEFAULT_WORKERS})</h3>
+            <h3 className="text-sm uppercase text-neutral-400 font-bold">Minimum Wage (P2)</h3>
           </div>
           <div className="space-y-1">
-            <span className="text-2xl font-extrabold text-green-400">{wcStatus.net} ¥</span>
+            <span className="text-3xl font-extrabold text-green-400">{allowedWageLevels}</span>
             <p className="text-xs text-neutral-500">
-              Wage: {wcStatus.wage}¥, Tax: {wcStatus.tax}¥
+              Wage levels allowed on Company cards (p. 30)
             </p>
           </div>
         </div>
 
-        {/* CC Status */}
+        {/* Income Tax per Population */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Briefcase className="w-5 h-5 text-amber-400" />
-            <h3 className="text-sm uppercase text-neutral-400 font-bold">CC Tax Burden (x{DEFAULT_COMPANIES})</h3>
+            <Coins className="w-5 h-5 text-amber-400" />
+            <h3 className="text-sm uppercase text-neutral-400 font-bold">Income Tax per Population (P2/P3)</h3>
           </div>
           <div className="space-y-1">
-            <span className="text-2xl font-extrabold text-amber-400">{ccStatus.employmentTax} ¥</span>
+            <span className="text-3xl font-extrabold text-amber-400">{incomeTaxRate} ¥</span>
+            {!isIncomeTaxRateVerified(policies.labor, policies.tax) && (
+              <p className="text-xs text-amber-400/80">Tax rate from the player aid table; not verified against the rules text.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Public Health / Education */}
+        <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Heart className="w-5 h-5 text-red-400" />
+            <h3 className="text-sm uppercase text-neutral-400 font-bold">Public Health / Education (P4/P5)</h3>
+          </div>
+          <div className="space-y-1">
+            <span className="text-2xl font-extrabold text-red-400">
+              Health {PUBLIC_SERVICE_PRICE[policies.health]} / Education {PUBLIC_SERVICE_PRICE[policies.education]}
+            </span>
             <p className="text-xs text-neutral-500">
-              Employment Tax (TM x {DEFAULT_COMPANIES})
+              Price per benefit (p. 31)
+            </p>
+          </div>
+        </div>
+
+        {/* Import tariffs */}
+        <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Truck className="w-5 h-5 text-blue-400" />
+            <h3 className="text-sm uppercase text-neutral-400 font-bold">Import tariffs (P6)</h3>
+          </div>
+          <div className="space-y-1">
+            <span className="text-2xl font-extrabold text-blue-400">
+              Food {TARIFF_RATES[policies.trade].food} / Luxury {TARIFF_RATES[policies.trade].luxury}
+            </span>
+            <p className="text-xs text-neutral-500">
+              Tariff per imported good (p. 32)
+            </p>
+          </div>
+        </div>
+
+        {/* New Workers per round */}
+        <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <UserPlus className="w-5 h-5 text-green-400" />
+            <h3 className="text-sm uppercase text-neutral-400 font-bold">New Workers per round (P7)</h3>
+          </div>
+          <div className="space-y-1">
+            <span className="text-2xl font-extrabold text-green-400">
+              2 + {IMMIGRATION_EXTRA_WORKERS[policies.immigration]}
+            </span>
+            <p className="text-xs text-neutral-500">
+              each for Working and Middle Class (p. 32)
             </p>
           </div>
         </div>
       </div>
 
-      {/* NEW: Loan Planner integrated below the quick stats, spanning all columns */}
+      {/* Loan Planner integrated below the quick stats, spanning all columns */}
       <div className="pt-2">
           <LoanCostCalc />
       </div>
 
-      {/* Hlavní interaktivní část - Policy Board */}
+      {/* Main interactive part - Policy Board */}
       <section className="pt-6">
         <PolicyBoard />
       </section>

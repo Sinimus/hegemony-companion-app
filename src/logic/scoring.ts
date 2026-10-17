@@ -1,5 +1,4 @@
 import { WEALTH_TRACK, PROSPERITY_LEVELS, getVpForNewProsperity, POLITICAL_AGENDA_POLICIES_1_5, POLITICAL_AGENDA_POLICIES_6_7, END_GAME_VP_ALIGNMENT, END_GAME_VP_CONVERSION } from './scoringData';
-import { WORKER_INCOME_TAX_RATES } from './taxData';
 import type { PolicyLevel, PolicyType, PlayerClass } from '@/types/game';
 
 /**
@@ -45,19 +44,6 @@ export const calculateCapitalistVp = (
     currentLevel: currentLevelIndex,
     previousLevel: previousLevelIndex,
   };
-};
-
-/**
- * Implementace Income Tax pro Working Class
- * Používá tabulku WORKER_INCOME_TAX_RATES (z taxData.ts)
- */
-export const calculateWorkerIncomeTax = (
-  workers: number,
-  laborPolicy: PolicyLevel, // P2
-  taxPolicy: PolicyLevel    // P3
-): number => {
-  const taxPerWorker = WORKER_INCOME_TAX_RATES[laborPolicy][taxPolicy];
-  return workers * taxPerWorker;
 };
 
 export type ProsperityAction = 'healthcare' | 'education' | 'luxury' | 'none';

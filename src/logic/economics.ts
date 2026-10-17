@@ -3,37 +3,32 @@ import {
   CORPORATE_TAX_TABLE,
   TAX_MULTIPLIER_CONSTANTS,
   WELFARE_TAX_MODIFIERS,
+  WORKER_INCOME_TAX_RATES,
 } from './taxData';
 
-// Konfigurace hodnot podle pravidel Hegemony
-export const WAGE_LEVELS = {
-  A: 20, // Pro-Labor (Vysoká mzda)
-  B: 15, // Balanced
-  C: 10  // Free Market (Nízká mzda)
+export type WageLevel = 'L1' | 'L2' | 'L3';
+
+// Labor Market (Policy 2) only limits the wage level on each Company card (p. 30).
+export const ALLOWED_WAGE_LEVELS: Record<PolicyLevel, readonly WageLevel[]> = {
+  A: ['L3'],
+  B: ['L2', 'L3'],
+  C: ['L1', 'L2', 'L3'],
 };
 
-export const getMinimumWage = (laborPolicy: PolicyLevel) => WAGE_LEVELS[laborPolicy];
+export function getAllowedWageLevels(laborPolicy: PolicyLevel): readonly WageLevel[] {
+  return ALLOWED_WAGE_LEVELS[laborPolicy];
+}
 
-export const calculateProductionCost = (
-  companies: number,
-  laborPolicy: PolicyLevel,
-  operationalCostPerCompany: number = 10
-) => {
-  const wage = getMinimumWage(laborPolicy);
-  const wagesTotal = companies * wage;
-  const opsTotal = companies * operationalCostPerCompany;
-  return {
-    wagePerWorker: wage,
-    totalWages: wagesTotal,
-    totalOps: opsTotal,
-    totalCost: wagesTotal + opsTotal
-  };
-};
+// Price of one Health/Education benefit per level of Policy 4 / Policy 5 (p. 31).
+export const PUBLIC_SERVICE_PRICE: Record<PolicyLevel, number> = { A: 0, B: 5, C: 10 };
+
+// Extra Workers per round from Immigration (Policy 7) on top of the base 2 (p. 32).
+export const IMMIGRATION_EXTRA_WORKERS: Record<PolicyLevel, number> = { A: 0, B: 1, C: 2 };
 
 /**
- * Centrální výpočet hodnoty Tax Multiplieru na základě Policy 3, 4 a 5.
- * Používá se pro výpočet Employment Tax a Wage Tax (CC/MC).
- * Pravidla: P3 určuje Base (3/2/1) a Modifikační Efekt (Double/Normal/Ignore P4/P5).
+ * Central calculation of the Tax Multiplier from Policies 3, 4 and 5.
+ * Used for the Employment Tax of the CC/MC.
+ * Rules: P3 sets the base (3/2/1) and the modifier effect (Double/Normal/Ignore P4/P5).
  */
 export const calculateTaxMultiplier = (
   p3: PolicyLevel,
@@ -44,28 +39,28 @@ export const calculateTaxMultiplier = (
   let multiplier = p3Const.base;
   let modifierSum = 0;
 
-  // 1. Sečtení modifikátorů z P4 a P5
+  // 1. Sum the modifiers from P4 and P5
   modifierSum += WELFARE_TAX_MODIFIERS.P4[p4];
   modifierSum += WELFARE_TAX_MODIFIERS.P5[p5];
 
-  // 2. Aplikace efektu P3 na součet modifikátorů
+  // 2. Apply the P3 effect to the modifier sum
   if (p3Const.multiplierEffect === 'double') {
     multiplier += modifierSum * 2;
   } else if (p3Const.multiplierEffect === 'normal') {
     multiplier += modifierSum;
   }
-  // Pokud je 'ignore' (P3 = C), nepřičítá se nic
+  // With 'ignore' (P3 = C) nothing is added
 
-  // Max hodnota Tax Multiplieru je 11.
+  // The Tax Multiplier is capped at 11.
   return Math.min(multiplier, 11);
 };
 
 /**
- * Přesný výpočet Corporate Tax na základě Revenue a P3.
- * Využívá lookup tabulku z pravidel. NEPOUŽÍVÁ Tax Multiplier.
- * @param revenue Aktuální Revenue (příjem po zaplacení provozních nákladů)
- * @param taxPolicy Aktuální Taxation Policy (P3)
- * @returns Daňová povinnost
+ * Exact Corporate Tax calculation from Revenue and P3.
+ * Uses the lookup table from the rules. Does NOT use the Tax Multiplier.
+ * @param revenue Money left in Revenue after the Employment Tax (p. 20)
+ * @param taxPolicy Current Taxation Policy (P3)
+ * @returns Tax due
  */
 export const calculateCorporateTax = (
   revenue: number,
@@ -78,7 +73,7 @@ export const calculateCorporateTax = (
   );
 
   if (!entry) {
-    // Teoreticky by se to nemělo stát kvůli Infinity v poslední řádce
+    // Should not happen thanks to Infinity in the last row
     return 0;
   }
 
@@ -86,13 +81,13 @@ export const calculateCorporateTax = (
 };
 
 /**
- * Vypočítá Employment Tax pro Capitalist Class a Middle Class.
- * Pravidlo: Employment Tax = Operational Companies x Tax Multiplier.
- * @param operationalCompanies Počet funkčních/automatizovaných společností.
- * @param p3 Taxation Policy (P3) - pro určení Tax Multiplieru.
- * @param p4 Healthcare Policy (P4) - pro určení Tax Multiplieru.
- * @param p5 Education Policy (P5) - pro určení Tax Multiplieru.
- * @returns Daňová povinnost (¥).
+ * Calculates the Employment Tax for the Capitalist Class and the Middle Class.
+ * Rule: Employment Tax = operational Companies x Tax Multiplier.
+ * @param operationalCompanies Number of operational (incl. automated) Companies.
+ * @param p3 Taxation Policy (P3) - determines the Tax Multiplier.
+ * @param p4 Healthcare Policy (P4) - determines the Tax Multiplier.
+ * @param p5 Education Policy (P5) - determines the Tax Multiplier.
+ * @returns Tax due (¥).
  */
 export const calculateEmploymentTax = (
   operationalCompanies: number,
@@ -103,6 +98,78 @@ export const calculateEmploymentTax = (
   const taxMultiplier = calculateTaxMultiplier(p3, p4, p5);
   return operationalCompanies * taxMultiplier;
 };
+
+/**
+ * Income Tax rate from the Income Tax table (P2 row, P3 column).
+ */
+export function getIncomeTaxRate(laborPolicy: PolicyLevel, taxPolicy: PolicyLevel): number {
+  return WORKER_INCOME_TAX_RATES[laborPolicy][taxPolicy];
+}
+
+/**
+ * Working Class Income Tax: rate per Population times Population (p. 17).
+ */
+export function calculateWorkingClassIncomeTax(
+  population: number,
+  laborPolicy: PolicyLevel,
+  taxPolicy: PolicyLevel
+): number {
+  return getIncomeTaxRate(laborPolicy, taxPolicy) * Math.max(0, population);
+}
+
+/**
+ * Middle Class Income Tax: rate times the number of other players' Companies
+ * (Capitalist or Public) where Middle Class Workers work (p. 25).
+ */
+export function calculateMiddleClassIncomeTax(
+  otherCompanies: number,
+  laborPolicy: PolicyLevel,
+  taxPolicy: PolicyLevel
+): number {
+  return getIncomeTaxRate(laborPolicy, taxPolicy) * Math.max(0, otherCompanies);
+}
+
+export interface CapitalistTaxInput {
+  revenue: number;              // money in Revenue before wages
+  wages: number;                // sum of the wages on your Companies at their current level
+  operationalCompanies: number; // Companies with Workers plus automated ones
+  taxPolicy: PolicyLevel;       // P3
+  healthPolicy: PolicyLevel;    // P4
+  educationPolicy: PolicyLevel; // P5
+}
+
+export interface CapitalistTaxResult {
+  afterWages: number;
+  employmentTax: number;
+  taxableRevenue: number; // Revenue left after the Employment Tax, never below 0
+  corporateTax: number;
+  capitalChange: number;  // afterWages - employmentTax - corporateTax; negative means Capital pays the rest
+}
+
+/**
+ * Capitalist Class taxes in paying order (p. 20): wages come out of Revenue
+ * first, then the Employment Tax, then Corporate Tax on the Revenue that remains.
+ * What Revenue cannot cover is taken from Capital (FAQ p. 38).
+ */
+export function calculateCapitalistTaxes(input: CapitalistTaxInput): CapitalistTaxResult {
+  const afterWages = input.revenue - input.wages;
+  const employmentTax = calculateEmploymentTax(
+    input.operationalCompanies,
+    input.taxPolicy,
+    input.healthPolicy,
+    input.educationPolicy
+  );
+  const taxableRevenue = Math.max(0, afterWages - employmentTax);
+  const corporateTax = calculateCorporateTax(taxableRevenue, input.taxPolicy);
+
+  return {
+    afterWages,
+    employmentTax,
+    taxableRevenue,
+    corporateTax,
+    capitalChange: afterWages - employmentTax - corporateTax,
+  };
+}
 
 /**
  * Calculates mandatory loan costs and penalties for planning purposes.

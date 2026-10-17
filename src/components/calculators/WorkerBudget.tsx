@@ -1,52 +1,68 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
-import { calculateWorkerIncomeTax } from '@/logic/scoring';
-import { getMinimumWage } from '@/logic/economics';
+import {
+  calculateWorkingClassIncomeTax,
+  getAllowedWageLevels,
+  getIncomeTaxRate,
+} from '@/logic/economics';
+import { isIncomeTaxRateVerified } from '@/logic/taxData';
 
 export function WorkerBudget() {
   const { policies } = useGameStore();
-  const [workers, setWorkers] = useState(3);
+  const [population, setPopulation] = useState(10);
+  const [wages, setWages] = useState(0);
 
-  const wage = getMinimumWage(policies.labor);
-  const gross = workers * wage;
-  const incomeTax = calculateWorkerIncomeTax(workers, policies.labor, policies.tax);
-  const net = gross - incomeTax;
+  const rate = getIncomeTaxRate(policies.labor, policies.tax);
+  const incomeTax = calculateWorkingClassIncomeTax(population, policies.labor, policies.tax);
+  const net = wages - incomeTax;
+  const allowedLevels = getAllowedWageLevels(policies.labor).join(', ');
 
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-class-working flex items-center gap-2">
-        ☭ Family Budget
+        ☭ Working Class Taxes
       </h3>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Employed Workers</label>
-          <div className="flex gap-2">
-            {[1, 2, 3, 4, 5].map(n => (
-              <button
-                key={n}
-                onClick={() => setWorkers(n)}
-                className={`w-10 h-10 rounded font-bold transition-all ${workers === n ? 'bg-class-working text-white' : 'bg-neutral-800 text-neutral-400'}`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
+          <label htmlFor="wc-population" className="text-xs uppercase text-neutral-500 font-bold">Population</label>
+          <input
+            id="wc-population"
+            type="number"
+            min="0"
+            value={population}
+            onChange={(e) => setPopulation(Number(e.target.value))}
+            className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
+          />
+          <p className="text-xs text-neutral-500">The Working Class starts with 10 Workers (p. 10)</p>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="wc-wages" className="text-xs uppercase text-neutral-500 font-bold">Wages received this round</label>
+          <input
+            id="wc-wages"
+            type="number"
+            min="0"
+            value={wages}
+            onChange={(e) => setWages(Number(e.target.value))}
+            className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
+          />
+          <p className="text-xs text-neutral-500">Sum of the wages on the Companies where your Workers work (p. 11-12)</p>
         </div>
 
         <div className="space-y-2 pt-4 border-t border-neutral-800">
           <div className="flex justify-between text-sm">
-            <span className="text-neutral-400">Gross Income ({wage}/worker)</span>
-            <span className="text-green-400 font-mono">+{gross}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-neutral-400">Income Tax (Pol: L{policies.labor} T{policies.tax})</span>
+            <span className="text-neutral-400">Income Tax ({rate} per Population, P2 {policies.labor} / P3 {policies.tax})</span>
             <span className="text-red-400 font-mono">-{incomeTax}</span>
           </div>
+          {!isIncomeTaxRateVerified(policies.labor, policies.tax) && (
+            <p className="text-xs text-amber-400/80">Tax rate from the player aid table; not verified against the rules text.</p>
+          )}
           <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
-            <span className="text-neutral-200">Net Income</span>
+            <span className="text-neutral-200">Wages after tax</span>
             <span className="text-white">{net}</span>
           </div>
+          <p className="text-xs text-neutral-500">Allowed wage levels (P2 {policies.labor}): {allowedLevels}</p>
         </div>
       </div>
     </div>
