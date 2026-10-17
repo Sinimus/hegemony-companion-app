@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateEndGameVp, settleEndGameLoans } from '@/logic/scoring';
+import { bestAchievedAgendaVp, calculateEndGameVp, settleEndGameLoans } from '@/logic/scoring';
 import type { PolicyLevel, PolicyType } from '@/types/game';
 
 // Examples from Hegemony English Rulebook v1.2 (rules collection `boardgames`, game `hegemony`).
@@ -138,5 +138,35 @@ describe('Capitalist Class end-game scoring (p. 21)', () => {
       resources: {},
     });
     expect(result.moneyVp).toBe(0);
+  });
+});
+
+describe('Hidden Agenda VP at game end (C&C p. 13, 16)', () => {
+  const middleExample = {
+    playerClass: 'middle' as const,
+    policies: allPolicies('B'),
+    loans: 1,
+    money: 38,
+    resources: {},
+  };
+
+  it('adds 4 Hidden Agenda VP to the old total', () => {
+    const without = calculateEndGameVp(middleExample);
+    const withAgenda = calculateEndGameVp({ ...middleExample, hiddenAgendaVp: 4 });
+    expect(withAgenda.hiddenAgendaVp).toBe(4);
+    expect(withAgenda.totalVp).toBe(without.totalVp + 4);
+  });
+
+  it('defaults to 0 and treats a negative value as 0', () => {
+    expect(calculateEndGameVp(middleExample).hiddenAgendaVp).toBe(0);
+    expect(calculateEndGameVp({ ...middleExample, hiddenAgendaVp: -3 }).hiddenAgendaVp).toBe(0);
+    expect(calculateEndGameVp(middleExample).totalVp).toBe(
+      calculateEndGameVp({ ...middleExample, hiddenAgendaVp: -3 }).totalVp
+    );
+  });
+
+  it('bestAchievedAgendaVp returns the highest achieved value, 0 for none', () => {
+    expect(bestAchievedAgendaVp([3, 5, 2])).toBe(5);
+    expect(bestAchievedAgendaVp([])).toBe(0);
   });
 });

@@ -37,7 +37,7 @@ const CLASS_BORDER: Record<PlayerClass, string> = {
 // The three screens: bottom bar on mobile, top bar from md up. Links carry the
 // hash address, so open-in-new-tab works and the hashchange listener navigates.
 export function ScreensNav() {
-  const { setup, screen } = useGameStore();
+  const { setupSegment, screen } = useGameStore();
 
   return (
     <nav
@@ -50,7 +50,7 @@ export function ScreensNav() {
           return (
             <a
               key={item.screen}
-              href={buildHash({ setup, screen: item.screen })}
+              href={buildHash({ setup: setupSegment, screen: item.screen })}
               aria-current={active ? 'page' : undefined}
               className={cn(
                 'flex-1 flex flex-col items-center justify-center gap-1 min-h-[44px] rounded-lg transition-colors',
@@ -71,7 +71,7 @@ export function ScreensNav() {
 
 // One tab per class that plays at the current player count, in turn order.
 export function ClassTabs() {
-  const { setup, screen, playerCount } = useGameStore();
+  const { setupSegment, screen, playerCount } = useGameStore();
 
   return (
     <nav aria-label="Classes" className="max-w-4xl mx-auto px-4 md:px-8 mb-6">
@@ -82,7 +82,7 @@ export function ClassTabs() {
           return (
             <a
               key={playerClass}
-              href={buildHash({ setup, screen: playerClass })}
+              href={buildHash({ setup: setupSegment, screen: playerClass })}
               aria-current={active ? 'page' : undefined}
               className={cn(
                 'flex-1 flex items-center justify-center gap-1 min-h-[44px] text-[11px] font-bold border-b-2 transition-colors',

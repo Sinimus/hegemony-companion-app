@@ -15,6 +15,11 @@ describe('parseHash', () => {
     expect(parseHash('#4p/nonsense')).toEqual({ setup: '4p', screen: 'guide' });
   });
 
+  it('parses the setup and round screens', () => {
+    expect(parseHash('#2p/setup')).toEqual({ setup: '2p', screen: 'setup' });
+    expect(parseHash('#4p+wca/round')).toEqual({ setup: '4p+wca', screen: 'round' });
+  });
+
   it('allows an empty setup', () => {
     expect(parseHash('#/endgame')).toEqual({ setup: '', screen: 'endgame' });
   });

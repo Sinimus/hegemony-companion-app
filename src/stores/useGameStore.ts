@@ -1,7 +1,15 @@
 import { create } from 'zustand';
 import type { PolicyType, PolicyLevel } from '@/types/game';
-import { playerCountFromSetup, playerCountToSetup, type PlayerCount } from '@/logic/players';
+import type { PlayerCount } from '@/logic/players';
 import { buildHash, parseHash, type Route, type Screen } from '@/logic/route';
+import {
+  DEFAULT_SETUP,
+  normalizeSetup,
+  segmentToSetup,
+  setupToSegment,
+  withClassCount,
+  type GameSetup,
+} from '@/logic/setup';
 
 // Policies used to be persisted; drop the stale copy so it cannot confuse anyone.
 try {
@@ -27,43 +35,53 @@ export const UNVERIFIED_START_POLICIES: readonly PolicyType[] = ['labor', 'trade
 interface GameState {
   policies: Record<PolicyType, PolicyLevel>;
   setPolicy: (policy: PolicyType, level: PolicyLevel) => void;
-  setup: string;
+  setup: GameSetup;
+  // The segment links are built from: the address's own (empty when it had no setup
+  // segment), or the normalized one once the user changes the setup.
+  setupSegment: string;
   screen: Screen;
+  // Derived from setup.classCount, updated together with setup.
   playerCount: PlayerCount;
   setScreen: (screen: Screen) => void;
+  setSetup: (next: GameSetup) => void;
   setPlayerCount: (count: PlayerCount) => void;
   resetGame: () => void;
 }
-
-const DEFAULT_PLAYER_COUNT: PlayerCount = 4;
 
 function readRoute(): Route {
   return parseHash(globalThis.location?.hash ?? '');
 }
 
-// An address without a setup segment keeps the default player count and is not
+// An address without a setup segment keeps the default setup and is not
 // rewritten until the user changes something.
 const initialRoute = readRoute();
+const initialSetup = segmentToSetup(initialRoute.setup) ?? DEFAULT_SETUP;
 
 export const useGameStore = create<GameState>((set, get) => ({
   policies: INITIAL_POLICIES,
   setPolicy: (policy, level) =>
     set((state) => ({ policies: { ...state.policies, [policy]: level } })),
-  setup: initialRoute.setup,
+  setup: initialSetup,
+  setupSegment: initialRoute.setup,
   screen: initialRoute.screen,
-  playerCount: playerCountFromSetup(initialRoute.setup) ?? DEFAULT_PLAYER_COUNT,
+  playerCount: initialSetup.classCount,
   setScreen: (screen) => {
     // A screen change is navigation: it goes through the address and creates a
     // history entry, so browser Back returns to the previous screen.
     if (globalThis.location) {
-      globalThis.location.hash = buildHash({ setup: get().setup, screen });
+      globalThis.location.hash = buildHash({ setup: get().setupSegment, screen });
     }
     set({ screen });
   },
-  setPlayerCount: (count) => {
+  setSetup: (next) => {
     // Changing the setup is not navigation: replace the address, no history entry.
-    globalThis.history?.replaceState(null, '', buildHash({ setup: playerCountToSetup(count), screen: get().screen }));
-    set({ setup: playerCountToSetup(count), playerCount: count });
+    const setup = normalizeSetup(next);
+    const segment = setupToSegment(setup);
+    globalThis.history?.replaceState(null, '', buildHash({ setup: segment, screen: get().screen }));
+    set({ setup, setupSegment: segment, playerCount: setup.classCount });
+  },
+  setPlayerCount: (count) => {
+    get().setSetup(withClassCount(get().setup, count));
   },
   resetGame: () => set({ policies: INITIAL_POLICIES }),
 }));
@@ -71,9 +89,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 // Follow edits of the address (navigation, a pasted or edited link).
 globalThis.addEventListener?.('hashchange', () => {
   const route = readRoute();
+  const setup = segmentToSetup(route.setup) ?? DEFAULT_SETUP;
   useGameStore.setState({
-    setup: route.setup,
+    setup,
+    setupSegment: route.setup,
     screen: route.screen,
-    playerCount: playerCountFromSetup(route.setup) ?? DEFAULT_PLAYER_COUNT,
+    playerCount: setup.classCount,
   });
 });

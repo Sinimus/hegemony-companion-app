@@ -237,6 +237,8 @@ export function settleEndGameLoans(playerClass: PlayerClass, loans: number, mone
  * @param input.policies Current state of all 7 policies (from useGameStore).
  * @param input.resources Resource pieces in Storages (the Free Trade Zone and Media count
  * for the classes whose lists include them); missing types count as 0.
+ * @param input.hiddenAgendaVp VP of a Hidden Agenda timed Game End (C&C p. 16); 0 by
+ * default, negative treated as 0.
  */
 export function calculateEndGameVp(input: {
     playerClass: PlayerClass;
@@ -244,9 +246,11 @@ export function calculateEndGameVp(input: {
     loans: number;
     money: number;
     resources: Partial<Record<EndGameResource, number>>;
-}): { policyVp: number; moneyVp: number; resourceVp: number; loanPenalty: number; moneyLeft: number; totalVp: number } {
+    hiddenAgendaVp?: number;
+}): { policyVp: number; moneyVp: number; resourceVp: number; loanPenalty: number; hiddenAgendaVp: number; moneyLeft: number; totalVp: number } {
     const { playerClass, policies, loans, money, resources } = input;
     const settlement = settleEndGameLoans(playerClass, loans, money);
+    const hiddenAgendaVp = Math.max(0, input.hiddenAgendaVp ?? 0);
 
     // 1. Policy table VP: count P1-P5 in the class's section and look the count up.
     const section = END_GAME_POLICY_SECTION[playerClass];
@@ -285,7 +289,16 @@ export function calculateEndGameVp(input: {
         moneyVp,
         resourceVp,
         loanPenalty,
+        hiddenAgendaVp,
         moneyLeft: settlement.moneyLeft,
-        totalVp: policyVp + moneyVp + resourceVp + loanPenalty,
+        totalVp: policyVp + moneyVp + resourceVp + loanPenalty + hiddenAgendaVp,
     };
+}
+
+/**
+ * An Automa scores the face-down (achieved) Hidden Agenda worth the most (C&C p. 13);
+ * none achieved scores 0.
+ */
+export function bestAchievedAgendaVp(achievedVp: readonly number[]): number {
+    return achievedVp.length > 0 ? Math.max(...achievedVp) : 0;
 }
