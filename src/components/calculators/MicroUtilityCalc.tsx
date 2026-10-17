@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
-import { calculateTradeUnionVp, calculateWelfareBenefits, getCapitalistAutomaPriority } from '@/logic/scoring';
-import { calculateTaxMultiplier } from '@/logic/economics';
+import { calculateTradeUnionVp, calculateWelfareSale } from '@/logic/scoring';
 import { Card } from '@/components/ui/card';
-import { Users, Scale, Factory } from 'lucide-react';
+import { Users, Scale } from 'lucide-react';
 
 // --- Trade Union VP (WC) ---
 
@@ -17,8 +16,8 @@ export function TradeUnionVpCalc() {
                 <Users className="w-4 h-4" /> Trade Union VP (Scoring)
             </h4>
             <div className="flex justify-between items-center">
-                <label className="text-sm text-neutral-400">WC Unions on Board</label>
-                <input type="number" min="0" value={tradeUnions} onChange={e => setTradeUnions(Number(e.target.value))} className="w-16 bg-neutral-950 border border-neutral-700 rounded p-1 text-right text-white" />
+                <label htmlFor="trade-unions" className="text-sm text-neutral-400">WC Unions on Board</label>
+                <input id="trade-unions" type="number" min="0" value={tradeUnions} onChange={e => setTradeUnions(Number(e.target.value))} className="w-16 bg-neutral-950 border border-neutral-700 rounded p-1 text-right text-white" />
             </div>
             <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
                 <span className="text-neutral-200">VP Gained (Current Round)</span>
@@ -32,71 +31,39 @@ export function TradeUnionVpCalc() {
 
 export function WelfareBenefitCalc() {
     const { policies } = useGameStore();
-    const [benefitsSold, setBenefitsSold] = useState(5);
+    const [healthSold, setHealthSold] = useState(0);
+    const [educationSold, setEducationSold] = useState(0);
 
-    const healthResult = calculateWelfareBenefits(policies.health, benefitsSold);
-    const educationResult = calculateWelfareBenefits(policies.education, benefitsSold);
-
-    const totalVp = healthResult.vpGain + educationResult.vpGain;
-    const totalLeg = healthResult.legitimacyGain + educationResult.legitimacyGain;
+    const healthResult = calculateWelfareSale(policies.health, healthSold);
+    const educationResult = calculateWelfareSale(policies.education, educationSold);
 
     return (
         <Card className="p-4 space-y-3 border-neutral-800/50">
             <h4 className="text-sm font-bold text-class-state flex items-center gap-2">
-                <Scale className="w-4 h-4" /> Welfare Benefits (State Revenue)
+                <Scale className="w-4 h-4" /> Welfare Benefits (State)
             </h4>
-            <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                    <label className="text-sm text-neutral-400">Total Benefits Sold (H/E)</label>
-                    <input type="number" min="0" value={benefitsSold} onChange={e => setBenefitsSold(Number(e.target.value))} className="w-16 bg-neutral-950 border border-neutral-700 rounded p-1 text-right text-white" />
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <label htmlFor="welfare-health-sold" className="text-xs uppercase text-neutral-500 font-bold">Health sold in this sale</label>
+                    <input id="welfare-health-sold" type="number" min="0" value={healthSold} onChange={e => setHealthSold(Number(e.target.value))} className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white" />
+                </div>
+                <div className="space-y-2">
+                    <label htmlFor="welfare-education-sold" className="text-xs uppercase text-neutral-500 font-bold">Education sold in this sale</label>
+                    <input id="welfare-education-sold" type="number" min="0" value={educationSold} onChange={e => setEducationSold(Number(e.target.value))} className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white" />
                 </div>
             </div>
-            <div className="pt-2 border-t border-neutral-800">
+            <div className="pt-2 border-t border-neutral-800 space-y-2">
                 <div className="flex justify-between text-sm">
-                    <span className="text-neutral-400">Health Policy (P4: {policies.health}) VP Gain</span>
-                    <span className="text-yellow-400">+{healthResult.vpGain} VP</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                    <span className="text-neutral-400">Education Policy (P5: {policies.education}) Leg Gain</span>
-                    <span className="text-yellow-400">+{educationResult.legitimacyGain} Leg</span>
-                </div>
-            </div>
-            <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
-                <span className="text-neutral-200">Total Bonus (VP/Leg)</span>
-                <span className="text-class-state">+{totalVp} VP / +{totalLeg} Leg</span>
-            </div>
-        </Card>
-    );
-}
-
-// --- Automa Decision Assistant (CC) ---
-
-export function AutomaDecisionAssistant() {
-    const { policies } = useGameStore();
-    const [ccCapital, setCcCapital] = useState(120);
-
-    const taxMultiplier = calculateTaxMultiplier(policies.tax, policies.health, policies.education);
-    const priority = getCapitalistAutomaPriority(ccCapital, taxMultiplier);
-
-    return (
-        <Card className="p-4 space-y-3 border-neutral-800/50">
-            <h4 className="text-sm font-bold text-red-500 flex items-center gap-2">
-                <Factory className="w-4 h-4" /> Automa Decision Assistant (CC)
-            </h4>
-            <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                    <label className="text-sm text-neutral-400">Capitalist Capital (¥)</label>
-                    <input type="number" min="0" value={ccCapital} onChange={e => setCcCapital(Number(e.target.value))} className="w-16 bg-neutral-950 border border-neutral-700 rounded p-1 text-right text-white" />
+                    <span className="text-neutral-400">Health, P4 {policies.health}</span>
+                    <span className="text-yellow-400 font-mono">+{healthResult.vpGain} VP / +{healthResult.legitimacyGain} Legitimacy</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                    <span className="text-neutral-400">Current Tax Multiplier (TM)</span>
-                    <span className="text-yellow-400 font-mono">{taxMultiplier}</span>
+                    <span className="text-neutral-400">Education, P5 {policies.education}</span>
+                    <span className="text-yellow-400 font-mono">+{educationResult.vpGain} VP / +{educationResult.legitimacyGain} Legitimacy</span>
                 </div>
-            </div>
-            <div className="flex flex-col pt-2 border-t border-neutral-800">
-                <span className="text-xs uppercase text-neutral-500 mb-1">CC Automa Next Priority</span>
-                <span className="text-lg font-black text-white">{priority.action}</span>
-                <span className="text-xs font-mono text-yellow-500 mt-1">Tool: {priority.tool}</span>
+                <p className="text-xs text-neutral-500">
+                    One sale at a time: section B gives 1 VP per sale, section A gives 1 Legitimacy to the buyer per 3 sold (p. 26-27).
+                </p>
             </div>
         </Card>
     );

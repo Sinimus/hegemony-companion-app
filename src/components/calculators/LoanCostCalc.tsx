@@ -16,10 +16,11 @@ export function LoanCostCalc() {
             </CardHeader>
             <CardContent className="p-4 space-y-4">
                 <div className="space-y-2">
-                    <label className="text-xs uppercase text-neutral-500 font-bold flex items-center gap-2">
+                    <label htmlFor="loan-count" className="text-xs uppercase text-neutral-500 font-bold flex items-center gap-2">
                         Number of Active Loans
                     </label>
                     <input
+                        id="loan-count"
                         type="number"
                         min="0"
                         value={loanCount}
@@ -35,24 +36,24 @@ export function LoanCostCalc() {
                             <span className="text-red-400 font-mono">-{costs.interestCost} ¥</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span className="text-neutral-400">Cost to Pay Off (Free Action)</span>
-                            <span className="text-green-400 font-mono">+{costs.payoffCost} ¥</span>
+                            <span className="text-neutral-400">Pay off (Free Action, 50 per Loan)</span>
+                            <span className="text-red-400 font-mono">-{costs.payoffCost} ¥</span>
                         </div>
 
                         <h4 className="text-xs uppercase text-red-500 font-bold pt-4 flex items-center gap-2">
                             <AlertTriangle className="w-3 h-3" /> End-Game Penalty Risk
                         </h4>
                         <div className="flex justify-between text-sm">
-                            <span className="text-neutral-400">CC Penalty (-5 VP/Loan)</span>
+                            <span className="text-neutral-400">Capitalist Class at game end (-5 VP per Loan)</span>
                             <span className="text-red-500 font-mono">-{costs.maxCcPenalty} VP</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span className="text-neutral-400">WC/MC/State Penalty (-11 VP/Loan max)</span>
+                            <span className="text-neutral-400">Other classes at game end (up to -11 VP per Loan if nothing is paid)</span>
                             <span className="text-red-500 font-mono">-{costs.maxWcMcPenalty} VP</span>
                         </div>
 
                         <p className="text-xs text-neutral-500 pt-2 italic">
-                            *Penalty occurs if you cannot afford 55¥ per loan during final repayment.
+                            At game end the other classes pay 55 per Loan in steps of 5 and lose 1 VP per 5 unpaid (p. 13).
                         </p>
                     </div>
                 )}

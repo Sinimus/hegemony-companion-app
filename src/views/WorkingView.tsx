@@ -16,9 +16,6 @@ export function WorkingView() {
       </div>
       <div className="grid gap-6 md:grid-cols-2"> {/* NEW ROW FOR MICRO UTILITY */}
         <TradeUnionVpCalc />
-        <div className="p-6 border border-dashed border-neutral-800 rounded-xl flex items-center justify-center text-neutral-600">
-          Future: Strike & Demonstration Influence Tracker
-        </div>
       </div>
       <FactionReference playerClass="working" />
     </div>

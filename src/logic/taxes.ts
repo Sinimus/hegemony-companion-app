@@ -1,62 +1,16 @@
 import type { PolicyLevel } from '@/types/game';
 
-// Konfigurace daňových sazeb pro Dělníky a Stát
-export const INCOME_TAX_RATES = {
-  A: 0.20, // Progressive (Vysoká)
-  B: 0.10, // Flat
-  C: 0.00  // Tax Haven (Žádná)
-};
-
-export const STATE_WAGE_COSTS = {
-  A: 20, // Social State (Vysoké platy ve veřejném sektoru)
-  B: 15,
-  C: 10
-};
-
-export const calculateNetWage = (
-  workers: number,
-  wageLevel: number, // Hodnota mzdy (např. 20)
-  taxPolicy: PolicyLevel
-) => {
-  const grossIncome = workers * wageLevel;
-  const taxRate = INCOME_TAX_RATES[taxPolicy];
-  const tax = Math.floor(grossIncome * taxRate);
-  return {
-    gross: grossIncome,
-    tax: tax,
-    net: grossIncome - tax
-  };
-};
-
-export const calculateStateBalance = (
-  stateEmployees: number,
-  privateCompanies: number,
-  fiscalPolicy: PolicyLevel,
-  taxPolicy: PolicyLevel
-) => {
-  const wageCost = stateEmployees * STATE_WAGE_COSTS[fiscalPolicy];
-  // Odhad příjmu z korporátní daně (průměr 20 revenue na firmu)
-  const estimatedCorpTax = privateCompanies * (taxPolicy === 'A' ? 5 : taxPolicy === 'B' ? 3 : 1);
-
-  return {
-    expenses: wageCost,
-    revenue: estimatedCorpTax,
-    balance: estimatedCorpTax - wageCost
-  };
-};
+// Loans at which the IMF intervenes in Check IMF if the State cannot pay them off (Fiscal Policy, p. 30).
+export const IMF_LOAN_THRESHOLD: Record<PolicyLevel, number> = { A: 2, B: 2, C: 1 };
 
 /**
- * Calculates the maximum safe loan limit for The State based on Fiscal Policy (P1).
- * IMF Intervention is triggered if the State has more loans than this limit (AND cannot pay 55¥/loan).
- * P1 A/B: Max 5 Loans
- * P1 C: Max 3 Loans
+ * Whether the State reaches the IMF intervention threshold for the current Fiscal Policy
+ * (Check IMF step of the Production Phase, p. 12). The IMF intervenes when the State holds
+ * at least the threshold number of Loans and cannot pay them off at 55 each at that moment.
+ * Interest has nothing to do with it.
+ * @param stateLoans Number of Loans the State currently holds.
  * @param fiscalPolicy Current Fiscal Policy (P1).
- * @returns Maximum safe loan count.
  */
-export const getIMFLoanLimit = (fiscalPolicy: PolicyLevel): number => {
-    if (fiscalPolicy === 'C') {
-        return 3;
-    }
-    // A and B allow more liberal borrowing, typically up to 5 loans.
-    return 5;
-};
+export function isImfInterventionDue(stateLoans: number, fiscalPolicy: PolicyLevel): boolean {
+    return stateLoans >= IMF_LOAN_THRESHOLD[fiscalPolicy];
+}

@@ -20,24 +20,24 @@ interface StrategyGuide {
 }
 
 const ROUND_PHASES = [
-    { name: 'Preparation Phase', order: '1. ', description: 'Setup, pay loan interest, draw cards, get new workers, reveal Agenda/Events.' },
-    { name: 'Action Phase', order: '2. ', description: '5 rounds of Main Action + Free Action. Turn Order: WC → MC → CC → State.' },
-    { name: 'Production Phase', order: '3. ', description: 'Reverse Order: State → CC → MC → WC. Production, pay wages, Cover Needs (Food), IMF Check, Pay Taxes.' },
-    { name: 'Elections Phase', order: '4. ', description: 'Refill Bag, vote on Bills, spend Influence, score Bill VP.' },
-    { name: 'Scoring Phase', order: '5. ', description: 'Score Prosperity/Wealth/Legitimacy/Agenda. Apply Event Penalties. Reduce Legitimacy/Prosperity levels.' },
+    { name: 'Preparation Phase', order: '1. ', description: 'Pay 5 interest per Loan, lower Prosperity (Working Class 1, Middle Class 2), draw back to 7 cards, add new Workers (p. 14, 18, 22).' },
+    { name: 'Action Phase', order: '2. ', description: '5 turns, each a Main Action (a card or a Basic Action) plus one Free Action. Order: WC → MC → CC → State (p. 11).' },
+    { name: 'Production Phase', order: '3. ', description: 'Reverse order State → CC → MC → WC: produce and pay one Wage per Company, Cover Needs with Food, Check IMF, Pay Taxes (p. 11-12).' },
+    { name: 'Elections Phase', order: '4. ', description: 'Refill the bag and vote on proposed Bills; a passed Bill scores 3 VP for its proposer and 1 VP for each supporter whose vote counted (p. 12, 32).' },
+    { name: 'Scoring Phase', order: '5. ', description: 'Score Trade Unions, Wealth, the Middle Class Prosperity check, the State\'s Legitimacy and Political Agenda; Legitimacy then drops to half (p. 17, 21, 25, 28-29).' },
 ];
 
 const FACTION_GUIDES: Record<PlayerClass, ActionGuide[]> = {
     'working': [
         { actionName: 'Assign Workers', actionType: 'Basic', description: 'Place up to 3 uncommitted workers on company slots or Trade Unions to secure income.', calculatorLink: 'WorkerBudget' },
-        { actionName: 'Use H/E/L', actionType: 'Free', description: 'Spend resources (Health, Education, Luxury) equal to Population to gain +1 Prosperity.', calculatorLink: 'WorkingProsperityCalc' },
-        { actionName: 'Strike', actionType: 'Basic', description: 'Place tokens on L1/L2 wage companies to pressure owners for raises, gaining Influence if production is blocked.', calculatorLink: 'WorkerBudget' },
+        { actionName: 'Use H/E/L', actionType: 'Free', description: 'Spend Health, Education or Luxury equal to your Population for +1 Prosperity. Healthcare also gives 2 VP and a new Worker; Education trains a Worker (p. 16).', calculatorLink: 'WorkingProsperityCalc' },
+        { actionName: 'Strike', actionType: 'Basic', description: 'Strike in up to 2 Companies with L1 or L2 Wages and no committed Workers; each that still pays L1 or L2 at production skips it and gives you 1 Influence. Public Companies only with 4 players (p. 15-16).', calculatorLink: 'WorkerBudget' },
         { actionName: 'Buy Goods & Services', actionType: 'Basic', description: 'Buy Food/Luxury/H/E/Influence (up to Pop limit) from 2 sources. Check P6 tariffs for Foreign Market.', calculatorLink: 'ImportTariffCalc' },
     ],
     'middle': [
         { actionName: 'Build Company', actionType: 'Basic', description: 'Pay cost and place own workers (committed) to run small business (max 8 companies).', calculatorLink: 'MiddleBalance' },
         { actionName: 'Extra Shift', actionType: 'Basic', description: 'Produce instantly using uncommitted MC workers (pay WC wage if applicable).', calculatorLink: 'MiddleBalance' },
-        { actionName: 'Sell to Foreign Market', actionType: 'Basic', description: 'Sell produced goods/services (1x per transaction) for revenue and 1 VP per trade.', calculatorLink: 'TradeCalc' },
+        { actionName: 'Sell to Foreign Market', actionType: 'Basic', description: 'Sell through the current Export card only: each listed deal once per action, never Influence; 1 VP per deal (p. 23).' },
         { actionName: 'Scoring Check', actionType: 'N/A', description: 'During Scoring, check if Prosperity < Operational Companies for free +1 Prosperity.', calculatorLink: 'MiddleProsperityCalc' },
     ],
     'capitalist': [
@@ -48,14 +48,14 @@ const FACTION_GUIDES: Record<PlayerClass, ActionGuide[]> = {
     ],
     'state': [
         { actionName: 'Event Action', actionType: 'Basic', description: 'Resolve an Event card, choose a class to support, gaining Legitimacy/VP/resources.', calculatorLink: 'StateScoringCalc' },
-        { actionName: 'Propose Bill', actionType: 'Basic', description: 'Propose a policy change (+/- 1 step). Spend 1 Influence for an Immediate Vote to gain 3 VP.', calculatorLink: 'PolicyBoard' },
-        { actionName: 'Extra Tax', actionType: 'Basic', description: 'Gain 10¥ from all players (Risk: -1 Legitimacy to 2 lowest classes).', calculatorLink: 'StateTreasury' },
+        { actionName: 'Propose Bill', actionType: 'Basic', description: 'Propose moving a Policy by one section; 1 Influence calls an Immediate Vote. You score 3 VP only if the Bill passes (p. 12, 27).', calculatorLink: 'PolicyBoard' },
+        { actionName: 'Extra Tax', actionType: 'Basic', description: 'Every other player pays you 10; Legitimacy always drops by 1 for the two Classes it is lowest with (p. 28).' },
         { actionName: 'Legitimacy Scoring', actionType: 'N/A', description: 'Gain VP equal to the sum of the two lowest Legitimacy scores.', calculatorLink: 'StateScoringCalc' },
     ],
 };
 
 const CLASS_STRATEGIES: Record<PlayerClass, StrategyGuide> = {
-    'working': { objective: 'Maximize Workers\' Prosperity and secure basic needs (Food, Health, Education, Luxury).', vp_source: 'Prosperity (VP = New Level) and Trade Unions (2 VP/round).', key_mechanics: 'Strikes, Demonstrations, Assigning Workers, Trade Unions.' },
+    'working': { objective: 'Maximize Workers\' Prosperity and secure basic needs (Food, Health, Education, Luxury).', vp_source: 'Prosperity (VP = new level) and 2 VP per Trade Union in each Scoring Phase.', key_mechanics: 'Strikes, Demonstrations, Assigning Workers, Trade Unions.' },
     'middle': { objective: 'Balance production, selling, and consuming to cover Workers\' needs and increase Prosperity.', vp_source: 'Prosperity (VP = New Level) and 1 VP per Foreign Market Transaction.', key_mechanics: 'Small Business Ownership, Extra Shifts, Self-Sufficiency.' },
     'capitalist': { objective: 'Maximize profit. Run Companies and sell goods/services, focusing on Capital growth.', vp_source: 'Wealth Track (VP from Total Capital + growth bonus) and End-Game scoring on Neoliberal policies (Section C).', key_mechanics: 'Business Deals, Lobbying, Adjusting Wages/Prices, Automation.' },
     'state': { objective: 'Maintain high Legitimacy by balancing all Classes and resolving societal Issues (Events).', vp_source: 'Legitimacy (Sum of 2 lowest scores) and Political Agenda match (1 VP/match).', key_mechanics: 'Event Action, Propose Bill, Extra Tax, Public Services management.' },
@@ -82,7 +82,7 @@ export function FactionReference({ playerClass }: FactionReferenceProps) {
                         <p className="text-sm text-neutral-400">{p.description}</p>
                     </div>
                 ))}
-                <p className="text-xs italic text-neutral-500 pt-2">Your turn occurs only during the **Action Phase** (WC → MC → CC → State).</p>
+                <p className="text-xs italic text-neutral-500 pt-2">Turns with Main and Free Actions happen in the Action Phase (WC → MC → CC → State); every player also pays, buys Food and votes in the Production and Elections Phases (p. 11-12).</p>
             </CardContent>
         </Card>
     );

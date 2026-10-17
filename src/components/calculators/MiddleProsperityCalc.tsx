@@ -94,6 +94,7 @@ export function MiddleProsperityCalc() {
           </p>
         </div>
       </div>
+      <p className="text-xs text-amber-400/80">The Middle Class track differs from the Working Class track (p. 7); its values are an image on the player board and not verified.</p>
     </div>
   );
 }

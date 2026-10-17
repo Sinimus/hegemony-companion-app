@@ -1,50 +1,40 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
-import { calculateProductionCost, calculateCorporateTax, calculateEmploymentTax } from '@/logic/economics';
-import { cn } from '@/lib/utils';
+import {
+  calculateCapitalistTaxes,
+  calculateTaxMultiplier,
+  getAllowedWageLevels,
+} from '@/logic/economics';
 
 export function ProductionCalc() {
   const { policies } = useGameStore();
-  const [companies, setCompanies] = useState(1);
-  const [revenue, setRevenue] = useState(50);
-  const [isAutomated, setIsAutomated] = useState(false); // NEW STATE for automation/machinery
+  const [revenue, setRevenue] = useState(0);
+  const [wages, setWages] = useState(0);
+  const [companies, setCompanies] = useState(4);
 
-  // Recalculate costs based on automation
-  let costs = calculateProductionCost(companies, policies.labor);
-  const employmentTax = calculateEmploymentTax(companies, policies.tax, policies.health, policies.education);
-
-  if (isAutomated) {
-    // Automated Company / Company with Machinery Token:
-    // Pays ZERO wages (Automated/Machinery Company rule).
-    costs = { ...costs, totalWages: 0, totalCost: costs.totalOps };
-    // Employment Tax already includes operational companies x TM, so no change there.
-  }
-
-  const corporateTax = calculateCorporateTax(revenue, policies.tax);
-
-  const profitBeforeTax = revenue - costs.totalCost;
-  const netProfit = profitBeforeTax - corporateTax - employmentTax; // Total costs applied
+  // Wages first, then Employment Tax, then Corporate Tax on the Revenue that remains (p. 20)
+  const taxMultiplier = calculateTaxMultiplier(policies.tax, policies.health, policies.education);
+  const result = calculateCapitalistTaxes({
+    revenue,
+    wages,
+    operationalCompanies: companies,
+    taxPolicy: policies.tax,
+    healthPolicy: policies.health,
+    educationPolicy: policies.education,
+  });
+  const allowedLevels = getAllowedWageLevels(policies.labor).join(', ');
 
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-blue-400 flex items-center gap-2">
-        🏭 Production Calculator
+        🏭 Capitalist Wages & Taxes
       </h3>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Companies</label>
+          <label htmlFor="cc-revenue" className="text-xs uppercase text-neutral-500 font-bold">Revenue before wages</label>
           <input
-            type="number"
-            min="1"
-            value={companies}
-            onChange={(e) => setCompanies(Number(e.target.value))}
-            className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Exp. Revenue</label>
-          <input
+            id="cc-revenue"
             type="number"
             min="0"
             value={revenue}
@@ -52,48 +42,55 @@ export function ProductionCalc() {
             className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
           />
         </div>
-      </div>
 
-      {/* NEW UI: Automation Toggle */}
-      <div className="flex items-center justify-between pt-2">
-        <span className="text-sm text-neutral-400">Simulate Automation (No Wages)</span>
-        <button
-          onClick={() => setIsAutomated(!isAutomated)}
-          className={cn(
-            'px-3 py-1 text-xs font-bold rounded-full transition-colors',
-            isAutomated ? 'bg-blue-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'
+        <div className="space-y-2">
+          <label htmlFor="cc-wages" className="text-xs uppercase text-neutral-500 font-bold">Wages of your Companies</label>
+          <input
+            id="cc-wages"
+            type="number"
+            min="0"
+            value={wages}
+            onChange={(e) => setWages(Number(e.target.value))}
+            className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
+          />
+          <p className="text-xs text-neutral-500">Sum of each Company's wage at its current level; automated Companies pay none (p. 20)</p>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="cc-companies" className="text-xs uppercase text-neutral-500 font-bold">Operational Companies</label>
+          <input
+            id="cc-companies"
+            type="number"
+            min="0"
+            value={companies}
+            onChange={(e) => setCompanies(Number(e.target.value))}
+            className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
+          />
+          <p className="text-xs text-neutral-500">Count automated Companies too; the Capitalist Class starts with 4 Companies (p. 8)</p>
+        </div>
+
+        <div className="space-y-2 pt-4 border-t border-neutral-800">
+          <div className="flex justify-between text-sm">
+            <span className="text-neutral-400">Wages</span>
+            <span className="text-red-400 font-mono">-{wages}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-neutral-400">Employment Tax (TM {taxMultiplier} x {companies})</span>
+            <span className="text-red-400 font-mono">-{result.employmentTax}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-neutral-400">Corporate Tax (P3 {policies.tax})</span>
+            <span className="text-red-400 font-mono">-{result.corporateTax}</span>
+          </div>
+          <p className="text-xs text-amber-400/80">Corporate Tax table not verified except Revenue 81 at P3 A (p. 20).</p>
+          <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
+            <span className="text-neutral-200">To Capital</span>
+            <span className={result.capitalChange >= 0 ? 'text-green-400' : 'text-red-500'}>{result.capitalChange}</span>
+          </div>
+          {result.capitalChange < 0 && (
+            <p className="text-xs text-neutral-500">Negative: the rest is paid from Capital (p. 38)</p>
           )}
-        >
-          {isAutomated ? 'AUTOMATED' : 'WORKERS'}
-        </button>
-      </div>
-
-      <div className="space-y-2 pt-4 border-t border-neutral-800">
-        {/* Wage line is now conditionally styled/valued */}
-        <div className="flex justify-between text-sm">
-          <span className={cn("text-neutral-400", isAutomated && "line-through opacity-50")}>
-            Wages ({costs.wagePerWorker}/worker)
-          </span>
-          <span className={cn("font-mono", isAutomated ? "text-neutral-600" : "text-red-400")}>
-            -{costs.totalWages}
-          </span>
-        </div>
-
-        <div className="flex justify-between text-sm">
-          <span className="text-neutral-400">Operational Costs</span>
-          <span className="text-red-400 font-mono">-{costs.totalOps}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-neutral-400">Employment Tax (TM: {companies > 0 ? employmentTax / companies : 0}/unit)</span>
-          <span className="text-red-400 font-mono">-{employmentTax}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-neutral-400">Corporate Tax (Pol: {policies.tax})</span>
-          <span className="text-red-400 font-mono">-{corporateTax}</span>
-        </div>
-        <div className="flex justify-between text-lg font-bold pt-2 border-t border-neutral-800">
-          <span className="text-neutral-200">Net Profit</span>
-          <span className={netProfit >= 0 ? 'text-green-400' : 'text-red-500'}>{netProfit}</span>
+          <p className="text-xs text-neutral-500">Allowed wage levels (P2 {policies.labor}): {allowedLevels}</p>
         </div>
       </div>
     </div>
