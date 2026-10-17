@@ -74,6 +74,7 @@ export function WorkingProsperityCalc() {
             </p>
         )}
       </div>
+      <p className="text-xs text-amber-400/80">VP equal the new Prosperity value (p. 16); the track values 0-10 are an image on the player board and not verified.</p>
     </div>
   );
 }

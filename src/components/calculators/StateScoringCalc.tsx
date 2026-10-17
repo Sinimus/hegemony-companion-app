@@ -153,6 +153,7 @@ export function StateScoringCalc() {
         <span className="text-neutral-200">Total VP from Scoring Phase</span>
         <span className="text-indigo-400">+{totalVp}</span>
       </div>
+      <p className="text-xs text-amber-400/80">The Legitimacy range 0-10 is an assumption; the track is only shown on the State board.</p>
     </div>
   );
 }

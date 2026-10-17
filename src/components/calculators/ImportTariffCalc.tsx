@@ -61,6 +61,7 @@ export function ImportTariffCalc() {
           *Tariff rate based on Policy 6 (Foreign Trade) is {tariffRate}¥/unit.
         </p>
       </div>
+      <p className="text-xs text-amber-400/80">Luxury costs 6 before tariffs (p. 15-16); the Food price is printed on the board and not verified against the rules text.</p>
     </div>
   );
 }
