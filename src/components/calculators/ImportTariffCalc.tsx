@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
 import { calculateImportCost, BASE_IMPORT_PRICES } from '@/logic/trade';
 import { Truck } from 'lucide-react';
@@ -8,6 +8,9 @@ export function ImportTariffCalc() {
   const { policies } = useGameStore();
   const [amount, setAmount] = useState(5);
   const [type, setType] = useState<'food' | 'luxury'>('food');
+  // This calculator appears on more than one screen, so ids must be unique per instance.
+  const typeInputId = useId();
+  const amountInputId = useId();
 
   const { baseCost, tariffCost, totalCost, tariffRate } = calculateImportCost(
     amount,
@@ -18,13 +21,14 @@ export function ImportTariffCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-neutral-300 flex items-center gap-2">
-        <Truck className="w-5 h-5 text-neutral-500" /> Import Cost Calculator
+        <Truck className="w-5 h-5 text-neutral-500" aria-hidden="true" /> Import Cost Calculator
       </h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Resource Type</label>
+          <label htmlFor={typeInputId} className="text-xs uppercase text-neutral-500 font-bold">Resource Type</label>
           <select
+            id={typeInputId}
             value={type}
             onChange={(e) => setType(e.target.value as 'food' | 'luxury')}
             className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
@@ -34,8 +38,9 @@ export function ImportTariffCalc() {
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-xs uppercase text-neutral-500 font-bold">Quantity to Import</label>
+          <label htmlFor={amountInputId} className="text-xs uppercase text-neutral-500 font-bold">Quantity to Import</label>
           <input
+            id={amountInputId}
             type="number"
             min="1"
             value={amount}

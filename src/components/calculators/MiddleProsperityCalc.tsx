@@ -27,7 +27,7 @@ export function MiddleProsperityCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-purple-400 flex items-center gap-2">
-        ⚜️ Prosperity Score
+        <span aria-hidden="true">⚜️</span> Prosperity Score
       </h3>
 
       <div className="space-y-4">
@@ -35,8 +35,9 @@ export function MiddleProsperityCalc() {
         <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
           <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">1. Action Phase: Use Action</h4>
           <div className="flex justify-between items-center mb-2">
-            <label className="text-sm text-neutral-400">Current Prosperity Level</label>
+            <label htmlFor="mpc-level" className="text-sm text-neutral-400">Current Prosperity Level</label>
             <select
+              id="mpc-level"
               value={currentLevel}
               onChange={(e) => setCurrentLevel(Number(e.target.value))}
               className="w-20 bg-neutral-900 border border-neutral-700 rounded p-1 text-right"
@@ -47,8 +48,9 @@ export function MiddleProsperityCalc() {
             </select>
           </div>
           <div className="flex justify-between items-center mb-2">
-            <label className="text-sm text-neutral-400">Action Type</label>
+            <label htmlFor="mpc-action" className="text-sm text-neutral-400">Action Type</label>
             <select
+              id="mpc-action"
               value={action}
               onChange={(e) => setAction(e.target.value as ProsperityAction)}
               className="w-32 bg-neutral-900 border border-neutral-700 rounded p-1 text-right"
@@ -69,8 +71,9 @@ export function MiddleProsperityCalc() {
         <div className="p-3 bg-neutral-950/50 rounded border border-neutral-800">
           <h4 className="text-xs font-bold text-neutral-500 uppercase mb-2">2. Scoring Phase: Prosperity Check</h4>
           <div className="flex justify-between items-center mb-2">
-            <label className="text-sm text-neutral-400">Fully Operational Companies</label>
+            <label htmlFor="mpc-companies" className="text-sm text-neutral-400">Fully Operational Companies</label>
             <input
+              id="mpc-companies"
               type="number"
               min="0"
               max="8"

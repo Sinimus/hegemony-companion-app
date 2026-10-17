@@ -9,7 +9,7 @@ export function EndGameView() {
       </header>
 
       <div className="bg-neutral-900/50 border border-yellow-400/50 rounded-lg p-6">
-        <h3 className="text-lg font-bold text-yellow-400 mb-3">🏁 Game End Rules</h3>
+        <h3 className="text-lg font-bold text-yellow-400 mb-3"><span aria-hidden="true">🏁</span> Game End Rules</h3>
         <p className="text-sm text-neutral-300 mb-4">
           The game ends after the <span className="font-bold text-white">Scoring Phase of Round 5</span>.
           Use the calculator below to determine final Victory Points based on:

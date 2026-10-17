@@ -24,7 +24,7 @@ export function AppFooter() {
               className="flex items-center gap-1 text-neutral-400 hover:text-white transition-colors"
               title="Email support"
             >
-              <Mail className="w-4 h-4" />
+              <Mail className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Contact</span>
             </a>
             <a
@@ -34,7 +34,7 @@ export function AppFooter() {
               className="flex items-center gap-1 text-neutral-400 hover:text-white transition-colors"
               title="View on GitHub"
             >
-              <Github className="w-4 h-4" />
+              <Github className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">GitHub</span>
             </a>
             <a
@@ -44,7 +44,7 @@ export function AppFooter() {
               className="flex items-center gap-1 text-neutral-400 hover:text-white transition-colors"
               title="Deployed version"
             >
-              <ExternalLink className="w-4 h-4" />
+              <ExternalLink className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Deploy</span>
             </a>
           </div>

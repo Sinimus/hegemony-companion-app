@@ -60,13 +60,13 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
             <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="space-y-2">
                     <label htmlFor={`endgame-${playerClass}-money`} className="text-xs uppercase text-neutral-500 font-bold flex items-center">
-                        <Coins className="w-3 h-3 mr-1" /> Money (¥)
+                        <Coins className="w-3 h-3 mr-1" aria-hidden="true" /> Money (¥)
                     </label>
                     <input id={`endgame-${playerClass}-money`} type="number" value={money} onChange={e => setMoney(Number(e.target.value))} className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white" />
                 </div>
                 <div className="space-y-2">
                     <label htmlFor={`endgame-${playerClass}-loans`} className="text-xs uppercase text-neutral-500 font-bold flex items-center">
-                        <AlertTriangle className="w-3 h-3 mr-1 text-red-400" /> Loans
+                        <AlertTriangle className="w-3 h-3 mr-1 text-red-400" aria-hidden="true" /> Loans
                     </label>
                     <input id={`endgame-${playerClass}-loans`} type="number" min="0" value={loans} onChange={e => setLoans(Number(e.target.value))} className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white" />
                 </div>
@@ -140,7 +140,7 @@ export function EndGameScoringCalc() {
             <Card className="bg-neutral-900/50 border-blue-400/50">
                 <CardHeader className="border-b border-blue-400/30">
                     <CardTitle className="flex items-center gap-2 text-xl text-blue-400">
-                        <Trophy className="w-6 h-6" />
+                        <Trophy className="w-6 h-6" aria-hidden="true" />
                         End-Game Scoring Simulator
                     </CardTitle>
                 </CardHeader>

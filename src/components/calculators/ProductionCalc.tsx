@@ -28,7 +28,7 @@ export function ProductionCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-blue-400 flex items-center gap-2">
-        🏭 Capitalist Wages & Taxes
+        <span aria-hidden="true">🏭</span> Capitalist Wages & Taxes
       </h3>
 
       <div className="space-y-4">

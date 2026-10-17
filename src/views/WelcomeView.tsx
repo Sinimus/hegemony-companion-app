@@ -34,7 +34,7 @@ function InstructionsSection() {
         <Card className="border-neutral-700/50 bg-neutral-900/50">
             <CardHeader className="border-b border-neutral-800">
                 <CardTitle className="flex items-center gap-2 text-xl">
-                    <BookOpen className="w-6 h-6 text-blue-400" />
+                    <BookOpen className="w-6 h-6 text-blue-400" aria-hidden="true" />
                     How to Use the Hegemony Companion
                 </CardTitle>
             </CardHeader>
@@ -45,7 +45,7 @@ function InstructionsSection() {
                         return (
                             <div key={index} className="flex gap-4 p-4 rounded-lg border border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900/70 transition-colors">
                                 <div className={`p-2 rounded-lg bg-neutral-800 ${instruction.color}`}>
-                                    <Icon className="w-5 h-5" />
+                                    <Icon className="w-5 h-5" aria-hidden="true" />
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="font-semibold text-white mb-2">{instruction.title}</h3>
@@ -57,7 +57,7 @@ function InstructionsSection() {
                 </div>
                 <div className="mt-6 p-4 rounded-lg border border-amber-500/30 bg-amber-500/10">
                     <div className="flex items-center gap-2 mb-2">
-                        <ChevronRight className="w-4 h-4 text-amber-400" />
+                        <ChevronRight className="w-4 h-4 text-amber-400" aria-hidden="true" />
                         <h3 className="font-semibold text-amber-400">Pro Tip</h3>
                     </div>
                     <p className="text-sm text-amber-200">
@@ -105,7 +105,7 @@ function AcronymsSection() {
                     {Object.entries(ACRONYMS).map(([acronym, full]) => (
                         <div key={acronym} className="flex items-center gap-2 p-2 rounded border border-neutral-800 bg-neutral-900/50">
                             <span className="font-mono text-sm font-semibold text-cyan-400">{acronym}</span>
-                            <ChevronRight className="w-3 h-3 text-neutral-500" />
+                            <ChevronRight className="w-3 h-3 text-neutral-500" aria-hidden="true" />
                             <span className="text-xs text-neutral-400">{full}</span>
                         </div>
                     ))}
@@ -121,7 +121,7 @@ function GlossarySection() {
             <Card className="border-neutral-700/50 bg-neutral-900/50">
                 <CardHeader className="border-b border-neutral-800">
                     <CardTitle className="flex items-center gap-2 text-xl">
-                        <BookOpen className="w-6 h-6 text-amber-400" />
+                        <BookOpen className="w-6 h-6 text-amber-400" aria-hidden="true" />
                         Hegemony Glossary & Reference
                     </CardTitle>
                 </CardHeader>
@@ -150,10 +150,10 @@ export function WelcomeView() {
     return (
         <div className="space-y-8 animate-enter">
             <header className="text-center space-y-4">
-                <h1 className="text-4xl font-black text-white tracking-tighter">
+                <h2 className="text-4xl font-black text-white tracking-tighter">
                     Welcome to HEGEMONY
                     <span className="block text-2xl font-normal text-neutral-500 mt-2">Companion App</span>
-                </h1>
+                </h2>
                 <p className="text-lg text-neutral-400 max-w-2xl mx-auto">
                     Your digital assistant for the ultimate economic strategy board game.
                     Calculate taxes, track prosperity, and master the policies that shape society.

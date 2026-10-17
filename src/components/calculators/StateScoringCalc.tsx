@@ -71,7 +71,7 @@ export function StateScoringCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-indigo-400 flex items-center gap-2">
-        👑 VP Scoring Phase
+        <span aria-hidden="true">👑</span> VP Scoring Phase
       </h3>
 
       {/* Part 1: Legitimacy Scoring */}
@@ -80,8 +80,10 @@ export function StateScoringCalc() {
 
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="flex flex-col items-center">
-            <Users className="w-5 h-5 text-green-400 mb-1" />
+            <Users className="w-5 h-5 text-green-400 mb-1" aria-hidden="true" />
+            <label htmlFor="state-leg-working" className="text-[11px] text-neutral-400 mb-1">Working</label>
             <input
+              id="state-leg-working"
               type="number"
               min="0"
               max="10"
@@ -91,8 +93,10 @@ export function StateScoringCalc() {
             />
           </div>
           <div className="flex flex-col items-center">
-            <Home className="w-5 h-5 text-purple-400 mb-1" />
+            <Home className="w-5 h-5 text-purple-400 mb-1" aria-hidden="true" />
+            <label htmlFor="state-leg-middle" className="text-[11px] text-neutral-400 mb-1">Middle</label>
             <input
+              id="state-leg-middle"
               type="number"
               min="0"
               max="10"
@@ -102,8 +106,10 @@ export function StateScoringCalc() {
             />
           </div>
           <div className="flex flex-col items-center">
-            <Briefcase className="w-5 h-5 text-amber-400 mb-1" />
+            <Briefcase className="w-5 h-5 text-amber-400 mb-1" aria-hidden="true" />
+            <label htmlFor="state-leg-capitalist" className="text-[11px] text-neutral-400 mb-1">Capitalist</label>
             <input
+              id="state-leg-capitalist"
               type="number"
               min="0"
               max="10"

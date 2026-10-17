@@ -13,7 +13,7 @@ export function WealthCalc() {
   return (
     <div className="space-y-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
       <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
-        🏦 Wealth Track
+        <span aria-hidden="true">🏦</span> Wealth Track
       </h3>
 
       <div className="grid grid-cols-2 gap-4">

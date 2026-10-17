@@ -33,7 +33,7 @@ export function DashboardView() {
         {/* Tax Multiplier */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-5 h-5 text-yellow-500" />
+            <Zap className="w-5 h-5 text-yellow-500" aria-hidden="true" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">Tax Multiplier</h3>
           </div>
           <div className="space-y-1">
@@ -47,7 +47,7 @@ export function DashboardView() {
         {/* Minimum Wage */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="w-5 h-5 text-green-400" />
+            <Users className="w-5 h-5 text-green-400" aria-hidden="true" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">Minimum Wage (P2)</h3>
           </div>
           <div className="space-y-1">
@@ -61,7 +61,7 @@ export function DashboardView() {
         {/* Income Tax per Population */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Coins className="w-5 h-5 text-amber-400" />
+            <Coins className="w-5 h-5 text-amber-400" aria-hidden="true" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">Income Tax per Population (P2/P3)</h3>
           </div>
           <div className="space-y-1">
@@ -75,7 +75,7 @@ export function DashboardView() {
         {/* Public Health / Education */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Heart className="w-5 h-5 text-red-400" />
+            <Heart className="w-5 h-5 text-red-400" aria-hidden="true" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">Public Health / Education (P4/P5)</h3>
           </div>
           <div className="space-y-1">
@@ -91,7 +91,7 @@ export function DashboardView() {
         {/* Import tariffs */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Truck className="w-5 h-5 text-blue-400" />
+            <Truck className="w-5 h-5 text-blue-400" aria-hidden="true" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">Import tariffs (P6)</h3>
           </div>
           <div className="space-y-1">
@@ -107,7 +107,7 @@ export function DashboardView() {
         {/* New Workers per round */}
         <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <UserPlus className="w-5 h-5 text-green-400" />
+            <UserPlus className="w-5 h-5 text-green-400" aria-hidden="true" />
             <h3 className="text-sm uppercase text-neutral-400 font-bold">New Workers per round (P7)</h3>
           </div>
           <div className="space-y-1">
