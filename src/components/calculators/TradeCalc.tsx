@@ -19,7 +19,7 @@ export function TradeCalc() {
           <label className="text-xs uppercase text-neutral-500 font-bold">Resource Type</label>
           <select
             value={type}
-            onChange={(e) => setType(e.target.value as any)}
+            onChange={(e) => setType(e.target.value as keyof typeof EXPORT_PRICES)}
             className="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white"
           >
             <option value="food">Food ({EXPORT_PRICES.food}¥/unit)</option>

@@ -80,7 +80,7 @@ export const calculateWorkingClassProsperityVp = (
   }
 
   const newLevel = currentLevel + 1;
-  let gainedVp = getVpForNewProsperity(newLevel);
+  const gainedVp = getVpForNewProsperity(newLevel);
   let bonusVp = 0;
 
   // Speciální bonus pro Use Healthcare: +2 bonus VP.

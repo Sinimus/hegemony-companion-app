@@ -5,7 +5,7 @@ import { calculateStateBalance } from '@/logic/taxes';
 import { calculateWorkerIncomeTax } from '@/logic/scoring';
 import { Users, Briefcase, Landmark, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { PolicyLevel } from '@/types/game';
+import type { PolicyLevel, PolicyType } from '@/types/game';
 import { LoanCostCalc } from '@/components/calculators/LoanCostCalc'; // NEW IMPORT
 
 // Defaultní hodnoty pro simulaci na Dashboardu
@@ -14,7 +14,7 @@ const DEFAULT_COMPANIES = 2; // Počet firem pro State balance a CC
 
 // --- Helper funkce pro WC/CC/State status ---
 
-function getWcStatus(policies: any) {
+function getWcStatus(policies: Record<PolicyType, PolicyLevel>) {
   const wage = getMinimumWage(policies.labor as PolicyLevel);
   const tax = calculateWorkerIncomeTax(DEFAULT_WORKERS, policies.labor as PolicyLevel, policies.tax as PolicyLevel);
   const net = (wage * DEFAULT_WORKERS) - tax;
@@ -22,7 +22,7 @@ function getWcStatus(policies: any) {
   return { wage, tax, net };
 }
 
-function getCcStatus(policies: any) {
+function getCcStatus(policies: Record<PolicyType, PolicyLevel>) {
   const tm = calculateTaxMultiplier(policies.tax as PolicyLevel, policies.health as PolicyLevel, policies.education as PolicyLevel);
   const employmentTax = calculateEmploymentTax(DEFAULT_COMPANIES, policies.tax as PolicyLevel, policies.health as PolicyLevel, policies.education as PolicyLevel);
 

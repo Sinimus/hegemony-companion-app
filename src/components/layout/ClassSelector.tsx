@@ -1,4 +1,4 @@
-import { useViewStore } from '@/stores/useViewStore';
+import { useViewStore, type View } from '@/stores/useViewStore';
 import { cn } from '@/lib/utils';
 import { Briefcase, Users, Home, Landmark, LayoutDashboard, BookOpen, Trophy } from 'lucide-react';
 
@@ -21,7 +21,7 @@ export function ClassSelector() {
         {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => setView(item.id as any)}
+            onClick={() => setView(item.id as View)}
             className={cn(
               'flex flex-col items-center p-2 rounded-lg transition-all min-w-[60px]',
               currentView === item.id
