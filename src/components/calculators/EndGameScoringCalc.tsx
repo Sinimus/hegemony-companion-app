@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGameStore } from '@/stores/useGameStore';
 import { calculateEndGameVp, settleEndGameLoans } from '@/logic/scoring';
 import { getActiveClasses } from '@/logic/players';
+import { hasModule, isAutoma } from '@/logic/setup';
 import { END_GAME_MONEY, END_GAME_POLICY_SECTION, END_GAME_RESOURCES, RESOURCE_PIECES_PER_VP } from '@/logic/scoringData';
 import type { EndGameResource } from '@/logic/scoringData';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -34,20 +35,26 @@ const CLASS_TITLE: Record<PlayerClass, string> = {
 
 // Helper component for class-specific inputs
 const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
-    const { policies } = useGameStore();
+    const { setup, policies } = useGameStore();
 
     const [money, setMoney] = useState(START_MONEY[playerClass]);
     const [loans, setLoans] = useState(0);
     const [resources, setResources] = useState<Record<EndGameResource, number>>({
         food: 0, luxury: 0, health: 0, education: 0, media: 0,
     });
+    const [hiddenAgendaVp, setHiddenAgendaVp] = useState(0);
 
     const classResources = END_GAME_RESOURCES[playerClass];
     const section = END_GAME_POLICY_SECTION[playerClass];
     const moneyRule = END_GAME_MONEY[playerClass];
 
+    // Hidden Agendas: a person's card timed Game End (C&C p. 16); an Automa scores
+    // the face-down Agenda it achieved that is worth the most (C&C p. 13).
+    const hiddenAgendasOn = hasModule('hiddenAgendas', setup);
+    const automaPlays = isAutoma(playerClass, setup);
+
     const settlement = settleEndGameLoans(playerClass, loans, money);
-    const results = calculateEndGameVp({ playerClass, policies, loans, money, resources });
+    const results = calculateEndGameVp({ playerClass, policies, loans, money, resources, hiddenAgendaVp });
 
     const getPenaltyColor = (penalty: number) => penalty < 0 ? 'text-red-500' : 'text-green-500';
 
@@ -85,6 +92,22 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
                         />
                     </div>
                 ))}
+                {hiddenAgendasOn && (
+                    <div className="space-y-2">
+                        <label htmlFor={`endgame-${playerClass}-hidden-agenda`} className="text-xs uppercase text-neutral-500 font-bold">
+                            {automaPlays ? 'Best achieved Hidden Agenda VP' : 'Hidden Agenda VP (Game End)'}{' '}
+                            <span className="font-normal normal-case text-neutral-600">{automaPlays ? '(C&C p. 13)' : '(C&C p. 16)'}</span>
+                        </label>
+                        <input
+                            id={`endgame-${playerClass}-hidden-agenda`}
+                            type="number"
+                            min="0"
+                            value={hiddenAgendaVp}
+                            onChange={e => setHiddenAgendaVp(Number(e.target.value))}
+                            className="w-full bg-neutral-950 border border-neutral-700 rounded p-1 text-white"
+                        />
+                    </div>
+                )}
             </div>
 
             <div className="space-y-1 pt-4 border-t border-neutral-800">
@@ -108,6 +131,12 @@ const ClassInputGroup = ({ playerClass }: { playerClass: PlayerClass }) => {
                     <span className="text-neutral-400">Resources in Storages</span>
                     <span className="text-yellow-400 font-mono">+{results.resourceVp} VP</span>
                 </div>
+                {hiddenAgendasOn && results.hiddenAgendaVp !== 0 && (
+                    <div className="flex justify-between text-sm">
+                        <span className="text-neutral-400">Hidden Agenda</span>
+                        <span className="text-yellow-400 font-mono">+{results.hiddenAgendaVp} VP</span>
+                    </div>
+                )}
                 <div className="flex justify-between text-sm">
                     <span className="text-neutral-400">Loans</span>
                     <span className={getPenaltyColor(results.loanPenalty)}>{results.loanPenalty} VP</span>

@@ -11,6 +11,7 @@ import { isIncomeTaxRateVerified } from '@/logic/taxData';
 import { TARIFF_RATES } from '@/logic/trade';
 import { Zap, Users, Coins, Heart, Truck, UserPlus } from 'lucide-react';
 import { LoanCostCalc } from '@/components/calculators/LoanCostCalc';
+import { PolicyChangeGuide } from '@/components/domain/PolicyChangeGuide';
 
 // --- Dashboard Component ---
 
@@ -120,6 +121,9 @@ export function DashboardView() {
           </div>
         </div>
       </div>
+
+      {/* What to adjust right after a Policy moves */}
+      <PolicyChangeGuide />
 
       {/* Loan Planner integrated below the quick stats, spanning all columns */}
       <div className="pt-2">
