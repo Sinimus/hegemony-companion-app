@@ -7,7 +7,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Lint, type check, unit tests, image smoke test and browser test; nothing
+  # is pushed or deployed unless they pass
+  checks:
+    uses: ./.github/workflows/pr-checks.yml
+    permissions:
+      contents: read
+
   build-and-push:
+    needs: checks
     runs-on: ubuntu-latest
     permissions:
       contents: read

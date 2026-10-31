@@ -26,3 +26,7 @@ dist-ssr
 # Project specific files
 CLAUDE.md
 DEVELOPMENT.md
+
+# Playwright
+/test-results/
+/playwright-report/
