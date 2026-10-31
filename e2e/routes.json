@@ -1,0 +1,11 @@
+[
+  { "path": "/", "heading": "Welcome to HEGEMONY" },
+  { "path": "/#4p/setup", "heading": "Game Setup" },
+  { "path": "/#4p/round", "heading": "Round Flow" },
+  { "path": "/#4p/policies", "heading": "Policy Overview & Impact" },
+  { "path": "/#4p/endgame", "heading": "End Game Scoring" },
+  { "path": "/#4p/working", "heading": "Working Class" },
+  { "path": "/#4p/middle", "heading": "Middle Class" },
+  { "path": "/#4p/capitalist", "heading": "Capitalist Class" },
+  { "path": "/#4p/state", "heading": "The State" }
+]

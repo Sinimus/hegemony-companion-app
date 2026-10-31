@@ -4,8 +4,14 @@
 
 The app is a static build served by nginx on port 80. The image lives at
 `ghcr.io/sinimus/hegemony-companion-app`, tagged `latest` and with the short commit SHA.
-A push to `main` builds and pushes it; pull requests run lint, type check, tests, a build
-and a Docker build with a smoke test.
+Pull requests run lint, type check, tests, a build, a Docker build with a smoke test and a
+Playwright browser test of that container: every screen in `e2e/routes.json` must render its
+heading from the bundle without a JavaScript or console error, and the screen menu and the
+player count must switch screens. A push to `main` runs the same checks first (`docker-build.yml`
+calls `pr-checks.yml`) and only then builds, pushes and deploys the image.
+
+The browser test runs locally against any running image: `pnpm exec playwright install chromium`
+once, then `pnpm test:e2e` (base URL `http://localhost:8080`, `E2E_BASE_URL` overrides).
 
 ## Run the published image
 

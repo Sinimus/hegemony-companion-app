@@ -1,10 +1,11 @@
 name: PR checks
 
-# Runs on pull requests only. The deploy pipeline (docker-build.yml: push to
-# main -> GHCR -> Coolify) is separate and unchanged.
+# Runs on pull requests, and docker-build.yml calls it before every deploy, so
+# a push to main reaches GHCR and Coolify only after the same checks.
 on:
   pull_request:
     branches: [main]
+  workflow_call:
 
 permissions:
   contents: read
@@ -54,10 +55,38 @@ jobs:
             if curl --silent --fail --output page.html http://localhost:8080/; then
               echo "Container answered on attempt ${i}"
               grep --quiet '<title>Hegemony Companion</title>' page.html
-              docker rm --force smoke
               exit 0
             fi
             sleep 2
           done
-          docker logs smoke
           exit 1
+
+      # Browser test against the same running container: every screen in
+      # e2e/routes.json must render from the bundle without a JavaScript error
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Browser test the image
+        run: pnpm test:e2e
+        env:
+          E2E_BASE_URL: http://localhost:8080
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
+
+      - name: Container logs and cleanup
+        if: always()
+        run: |
+          docker logs smoke || true
+          docker rm --force smoke || true
